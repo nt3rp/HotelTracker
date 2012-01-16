@@ -2,6 +2,10 @@ from utils import Hotel, visit_page
 from pyquery import PyQuery as pq
 
 class Doubletree(Hotel):
+    __keywords = {
+        "arrival": "arrivalDate",
+        "departure": "departureDate"
+    }    
     __pages = [{
         "url": "https://secure3.hilton.com/en_US/dt/reservation/book.htm",
         "data": {
@@ -49,8 +53,12 @@ class Doubletree(Hotel):
         self.analyze_response(response)
         
     def patch_data(self, data, **kwargs):
+        #TODO: run hotel specific function on value
+        
+        #A bit messy, but convert generic args to hotel specific
         for key, value in kwargs.items():
-            pass
+            if key in self.__keywords.keys():
+                data[self.__keywords[key]] = value
         return data
         
     def analyze_response(self, html):
