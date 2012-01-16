@@ -1,12 +1,13 @@
-from utils import Hotel, visit_page
-from pyquery import PyQuery as pq
+from utils import Hotel
+
 
 class Doubletree(Hotel):
-    __keywords = {
+    _availability_selector = "#roomViewRegularView"
+    _keywords = {
         "arrival": "arrivalDate",
         "departure": "departureDate"
-    }    
-    __pages = [{
+    }
+    _pages = [{
         "url": "https://secure3.hilton.com/en_US/dt/reservation/book.htm",
         "data": {
             "ctyhocn": "YYZIPDT"                #UNKNOWN: City Hotel Code?
@@ -41,30 +42,3 @@ class Doubletree(Hotel):
             "execution": "e5s2"
         }
     }]
-    
-    
-    def __init__(self, opener):
-        self.__opener = opener
-    
-    def check_availability(self, **kwargs):
-        response = ""
-        for page in self.__pages:
-            response = visit_page(self.__opener, page["url"], self.patch_data(page["data"], **kwargs)) #Is it not possible to use dot notation with python dictionaries?
-        self.analyze_response(response)
-        
-    def patch_data(self, data, **kwargs):
-        #TODO: run hotel specific function on value
-        
-        #A bit messy, but convert generic args to hotel specific
-        for key, value in kwargs.items():
-            if key in self.__keywords.keys():
-                data[self.__keywords[key]] = value
-        return data
-        
-    def analyze_response(self, html):
-        query = pq(html)
-        if query("#roomViewRegularView"):
-            print("At least one room is available!")
-        else:
-            print("No rooms are available")
-        
