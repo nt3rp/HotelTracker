@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 import sys
 import argparse
-from utils import create_url_opener, visit_page
+from utils import create_url_opener, visit_page, get_hotels_from_config
 from hotels import Doubletree
 import cookielib
 import time
@@ -21,16 +21,18 @@ def main():
 
     cookie_jar = cookielib.CookieJar()
     opener = create_url_opener(cookie_jar)
-    hotel = Doubletree(opener)
+    hotels = get_hotels_from_config(opener)
     
     #TODO: Is this really the best way to determine if we should run this one or more times?
     if arguments["frequency"] == 0:
-        hotel.check_availability(**arguments)
+        for hotel in hotels:
+            hotel.check_availability(**arguments)
     else:
         #TODO: is this really the best way to loop?
         while True:
             try:
-                hotel.check_availability(**arguments)
+                for hotel in hotels:
+                    hotel.check_availability(**arguments)
                 cookie_jar.clear()
                 time.sleep(arguments["frequency"] * 60)
             except KeyboardInterrupt:

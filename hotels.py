@@ -1,9 +1,9 @@
-from utils import Hotel
+from utils import HotelWebsite
 
 
-class Doubletree(Hotel):
+class Doubletree(HotelWebsite):
     _availability_selector = "#roomViewRegularView"
-    _keywords = {
+    _params = {
         "arrival": "arrivalDate",
         "departure": "departureDate"
     }
