@@ -2,3 +2,5 @@ TODO:
 -Add notification support
 -Allow more options (e.g. select hotel, date / time, number of rooms, etc.)
 -Add twitter support
+-Add unit tests
+-Refactor (always? maybe...)
