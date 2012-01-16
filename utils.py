@@ -20,6 +20,6 @@ def visit_page(url_opener, url, data={}):
     return results
     
 class Hotel(object):
-	def check_availability(self):
-		"""Checks the availability of the hotel using available requirements"""
-		raise NotImplementedError( "Should have implemented this" )
+    def check_availability(self, **kwargs):
+        """Checks the availability of the hotel using available requirements"""
+        raise NotImplementedError( "Should have implemented this" )
