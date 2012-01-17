@@ -4,4 +4,3 @@ TODO:
 -Add twitter support
 -Add unit tests
 -Refactor (always? maybe...)
--Build hotel instance from config file

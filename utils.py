@@ -2,6 +2,7 @@ import json
 import urllib
 import urllib2
 import cookielib
+from datetime import datetime
 from pyquery import PyQuery as pq
 
 def write_file(content, filename = "output.html"):
@@ -43,7 +44,7 @@ def create_hotel_from_config(opener, config):
     return HotelWebsite(opener, **config)
     
 class HotelWebsite(object):
-    def __init__(self, opener, availability_selector = "", params = "", pages = []):
+    def __init__(self, opener, availability_selector = "", params = "", date_format = "", pages = []):
         self.__opener = opener
         self.__param_fns = {
             "arrival": self.__format_date,
@@ -52,7 +53,9 @@ class HotelWebsite(object):
         
         self._availability_selector = availability_selector
         self._params = params
+        self._date_format = date_format
         self._pages = pages
+        
         
     def __patch_data(self, data, **kwargs):
         for key, value in kwargs.items():
@@ -62,10 +65,11 @@ class HotelWebsite(object):
         return data
     
     def __format_date(self, str_date):
-        return str_date
+        original_date = datetime.strptime(str_date, "%Y-%m-%d")
+        formatted_date = original_date.strftime(self._date_format)
+        return formatted_date
         
     def __analyze_response(self, html):
-        #write_file(html)
         query = pq(html)
         if query(self._availability_selector):
             print("At least one room is available!")

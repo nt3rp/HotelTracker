@@ -4,6 +4,7 @@
         "arrival": "arrivalDate",
         "departure": "departureDate"
     },
+    "date_format": "%d %b %Y",
     "pages" : [
         {
             "url": "https://secure3.hilton.com/en_US/dt/reservation/book.htm",
