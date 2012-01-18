@@ -17,15 +17,21 @@ def create_url_opener(cookie_jar = None):
     url_opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_jar))
     return url_opener
 
-def visit_page(url_opener, url, data={}):
+def visit_page(url_opener, url, data={}, method="POST"):
     if type(data) is dict:
         data = urllib.urlencode(data)
 
+    response = ""
     #TODO: handle open errors
-    response = url_opener.open(url, data)
+    if method == "POST":
+        response = url_opener.open(url, data)
+    else:
+        url = url + "?" + data
+        response = url_opener.open(url)
     results  = response.read()
     response.close()
     return results
+
 
 def get_hotels_from_config(opener, filename = "hotels.json"):
     hotels   = []
@@ -44,7 +50,8 @@ def create_hotel_from_config(opener, config):
     return HotelWebsite(opener, **config)
     
 class HotelWebsite(object):
-    def __init__(self, opener, availability_selector = "", params = "", date_format = "", pages = []):
+    #TODO: use kwargs?
+    def __init__(self, opener, name = "", display = "", availability_selector = "", params = "", date_format = "", pages = []):
         self.__opener = opener
         self.__param_fns = {
             "arrival": self.__format_date,
@@ -55,6 +62,8 @@ class HotelWebsite(object):
         self._params = params
         self._date_format = date_format
         self._pages = pages
+        self._name = name
+        self._display = display
         
         
     def __patch_data(self, data, **kwargs):
@@ -71,15 +80,20 @@ class HotelWebsite(object):
         
     def __analyze_response(self, html):
         query = pq(html)
-        if query(self._availability_selector):
+        found_element = query(self._availability_selector)
+        if found_element and found_element.html() != self._availability_selector: #Why does query find something that isn't here?
             print("At least one room is available!")
         else:
             print("No rooms are available")
     
     def check_availability(self, **kwargs):
         response = ""
+        #counter = 0
         for page in self._pages:
             url = page["url"]
             data = self.__patch_data(page["data"], **kwargs)
-            response = visit_page(self.__opener, url, data)
+            method = page.get("method", "POST")
+            response = visit_page(self.__opener, url, data=data, method=method)
+            #counter += 1
+            #write_file(response, "output" + str(counter) + ".html")
         self.__analyze_response(response)

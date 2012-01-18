@@ -4,3 +4,4 @@ TODO:
 -Add twitter support
 -Add unit tests
 -Refactor (always? maybe...)
+-Include tool to figure out parameters

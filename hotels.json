@@ -1,4 +1,6 @@
 [{
+    "name": "DoubleTree International",
+    "display": "DoubleTree",
     "availability_selector": "#roomViewRegularView",
     "params": {
         "arrival": "arrivalDate",
