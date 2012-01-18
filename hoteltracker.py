@@ -5,6 +5,7 @@ from utils import create_url_opener, visit_page, get_hotels_from_config
 from hotels import Doubletree
 import cookielib
 import time
+from datetime import datetime
 
 def write_output(filename, content):
     output_file = open(filename, "w");
@@ -24,16 +25,27 @@ def main():
     opener = create_url_opener(cookie_jar)
     hotels = get_hotels_from_config(opener, arguments["config"])
     
-    #TODO: Is this really the best way to determine if we should run this one or more times?
+    lastChange = {}
+    
+    for hotel in hotels:
+        hotel_name = hotel.get_display_name()
+        lastChange[hotel_name] = {}
+        lastChange[hotel_name]["time"] = datetime.now()
+        lastChange[hotel_name]["status"] = False
+    
     if arguments["frequency"] == 0:
         for hotel in hotels:
             hotel.check_availability(**arguments)
     else:
-        #TODO: is this really the best way to loop?
         while True:
             try:
                 for hotel in hotels:
-                    hotel.check_availability(**arguments)
+                    result = hotel.check_availability(**arguments)
+                    hotel_name = hotel.get_display_name();
+                    if (lastChange[hotel_name]["status"] != result["status"]):
+                        lastChange[hotel_name]["time"] = datetime.now()
+                        lastChange[hotel_name]["status"] = result["status"]
+                        print result["message"]
                 cookie_jar.clear()
                 time.sleep(arguments["frequency"] * 60)
             except KeyboardInterrupt:

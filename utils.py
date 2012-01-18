@@ -80,11 +80,19 @@ class HotelWebsite(object):
         
     def __analyze_response(self, html):
         query = pq(html)
-        found_element = query(self._availability_selector)
-        if found_element and found_element.html() != self._availability_selector: #Why does query find something that isn't here?
-            print("At least one room is available!")
+        found_element = query(self._availability_selector) #Why does 'query' find something that isn't here?
+        
+        found = found_element and found_element.html() != self._availability_selector
+        message = ""
+        if found: 
+            message = "At least one room is available!"
         else:
-            print("No rooms are available")
+            message = "No rooms are available"
+        
+        return {
+            "status": found,
+            "message": message
+        }
     
     def check_availability(self, **kwargs):
         response = ""
@@ -96,4 +104,10 @@ class HotelWebsite(object):
             response = visit_page(self.__opener, url, data=data, method=method)
             #counter += 1
             #write_file(response, "output" + str(counter) + ".html")
-        self.__analyze_response(response)
+        return self.__analyze_response(response)
+        
+    def get_name(self):
+        return self._name
+        
+    def get_display_name(self):
+        return self._display
