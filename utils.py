@@ -83,15 +83,15 @@ class HotelWebsite(object):
         found_element = query(self._availability_selector) #Why does 'query' find something that isn't here?
         
         found = found_element and found_element.html() != self._availability_selector
-        message = ""
+        message = "{0:s}: "
         if found: 
-            message = "At least one room is available!"
+            message += "At least one room is available!"
         else:
-            message = "No rooms are available"
+            message += "No rooms are available"
         
         return {
-            "status": found,
-            "message": message
+            "availability": found,
+            "message": message.format(self._display)
         }
     
     def check_availability(self, **kwargs):
