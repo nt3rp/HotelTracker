@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 import sys
 import argparse
 from utils import create_url_opener, visit_page, get_hotels_from_config
