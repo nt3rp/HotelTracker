@@ -6,8 +6,9 @@ import sys
 from models import HotelWebsite
 from util import create_url_opener
 
+# TODO: Automatically list log module, line, function
+
 def main():
-    #Hooray! It appears that the parameters don't really change!
     # Parse arguments
     parser = argparse.ArgumentParser(description='Try to find out if there is vacancy at a hotel.');
     parser.add_argument('--arrival',   required=True, help="The day you will be arriving")

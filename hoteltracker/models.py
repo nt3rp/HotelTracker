@@ -52,6 +52,7 @@ class HotelWebsite(object):
             logging.info('Visiting page {0}'.format(url))
         results = response.read()
         logging.debug('_visit_page: response:\n{0}'.format(results))
+        logging.info('_visit_page: headers: {0}'.format(unicode(response.info())))
         response.close()
         return results
 
