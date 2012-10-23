@@ -2,13 +2,14 @@ import json
 import logging
 import urllib
 from datetime import datetime
+from pyquery import PyQuery as pq
 
 class HotelWebsite(object):
     """Each hotel knows how to do a few things:
         - check it's availability
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, opener, **kwargs):
         """Creates a new HotelWebsite instance.
 
         Required arguments:
@@ -18,36 +19,39 @@ class HotelWebsite(object):
 
         Optional arguments:
             formats     : a dictionary of formats for different field types
+            short_name  : short version of the display name
         """
         logging.info('Creating new HotelWebsite')
+        if not all(test in kwargs for test in ('name', 'pages', 'fields')):
+            # Is there a simple way that we can both check this, and list the missing field?
+            raise ValueError('Missing one of \'name\', \'pages\', or \'fields\'')
 
-        # TODO: Check kwargs for bad values
         for k, v in kwargs.iteritems():
             var = '_{key}'.format(key=k)
             setattr(self, var, v)
             logging.debug('set HotelWebsite.{0}: {1}'.format(var, v))
 
         # For now, use a global URL opener
-        self.__opener = args[0]
-        logging.debug('set HotelWebsite.__opener: {0}'.format(args[0]))
+        self.__opener = opener
+        logging.debug('set HotelWebsite.__opener: {0}'.format(opener))
 
 
     # Private methods
     def _visit_page(self, url, data=None, method=None):
         """ Visits a single page """
-        logging.info('Visiting page {0}'.format(url))
         if data:
             data = urllib.urlencode(data)
-
-        logging.debug('')
 
         #TODO: handle open errors
         if method == 'POST':
             response = self.__opener.open(url, data)
+            logging.info('Visited page {0} with {1} params'.format(url, data))
         else:
             url = url + '?' + data
             response = self.__opener.open(url)
-        results  = response.read()
+            logging.info('Visiting page {0}'.format(url))
+        results = response.read()
+        logging.debug('_visit_page: response:\n{0}'.format(results))
         response.close()
         return results
 
@@ -70,7 +74,7 @@ class HotelWebsite(object):
         return data
 
     def _get_results(self, response):
-        logging.debug('Analyzing results from response:\n{0}'.format(response))
+        logging.info('_get_results: Analyzing availability results')
         return response
 
     # Public methods

@@ -1,6 +1,6 @@
 [{
     "name": "DoubleTree International",
-    "display": "DoubleTree",
+    "short_name": "DoubleTree",
     "availability_selector": "#roomViewRegularView",
     "fields": {
         "arrival": {
