@@ -2,11 +2,19 @@
     "name": "DoubleTree International",
     "display": "DoubleTree",
     "availability_selector": "#roomViewRegularView",
-    "params": {
-        "arrival": "arrivalDate",
-        "departure": "departureDate"
+    "fields": {
+        "arrival": {
+            "name": "arrivalDate",
+            "type": "date"
+        },
+        "departure": {
+            "name": "departureDate",
+            "type": "date"
+        }
     },
-    "date_format": "%d %b %Y",
+    "formats": {
+        "date": "%d %b %Y"
+    },
     "pages" : [
         {
             "url": "https://secure3.hilton.com/en_US/dt/reservation/book.htm",
