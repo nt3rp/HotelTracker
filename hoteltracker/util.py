@@ -11,7 +11,7 @@ def create_url_opener(cookie_jar=None):
 
 def check_hotels(hotels, arguments, cookie_jar):
     for hotel in hotels:
-        hotel.check_availability(**arguments)
+        hotel.is_available(**arguments)
         time.sleep(arguments["frequency"] * 60)
 
         # Clear all cookies after visiting a hotel

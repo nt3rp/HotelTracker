@@ -55,14 +55,12 @@ class HotelWebsite(object):
 
         logging.info('_visit_page: url  = {0}'.format(url))
         logging.info('_visit_page: data = {0}'.format(data))
-        response = self.__opener.open(url, data)
 
-        logging.debug('_visit_page: headers = {0}'.format(
-            unicode(response.info())
-        ))
-
-        results = response.read()
-        response.close()
+        with self.__opener.open(url, data) as response:
+            logging.debug('_visit_page: headers = {0}'.format(
+                unicode(response.info())
+            ))
+            results = response.read()
 
         logging.debug('_visit_page: response = \n{0}'.format(results))
         return results
@@ -109,7 +107,7 @@ class HotelWebsite(object):
         return success
 
     # Public methods
-    def check_availability(self, **kwargs):
+    def is_available(self, **kwargs):
         if not all(test in kwargs for test in ('arrival', 'departure')):
             raise ValueError("Missing arrival or departure time")
 
@@ -127,9 +125,8 @@ class HotelWebsite(object):
     @classmethod
     def from_json_file(cls, opener, file):
         hotels = []
-        f_handle = open(file, 'r')
-        json_obj = json.loads(f_handle.read())
-        f_handle.close()
+        with open(file, 'r') as f_handle:
+            json_obj = json.loads(f_handle.read())
 
         for kwargs in json_obj:
             hotels.append(cls(opener, **kwargs))
