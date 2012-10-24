@@ -4,9 +4,7 @@ import cookielib
 import logging
 import sys
 from models import HotelWebsite
-from util import create_url_opener
-
-# TODO: Automatically list log module, line, function
+from util import create_url_opener, check_hotels
 
 def main():
     # Parse arguments
@@ -31,8 +29,17 @@ def main():
     logging.info("main: Getting list of hotels")
     hotels = HotelWebsite.from_json_file(opener, arguments["config"])
 
-    for hotel in hotels:
-        hotel.check_availability(**arguments)
+    if arguments["frequency"] <= 0:
+        check_hotels(hotels, arguments)
+        return
+
+    try:
+        while True:
+            check_hotels(hotels, arguments)
+    except KeyboardInterrupt:
+        print "\nKeyboardInterrupt received. Halting..."
+    except Exception, e:
+        print e
 
 if __name__ == "__main__":
     sys.exit(main())

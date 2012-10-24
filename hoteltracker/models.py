@@ -85,7 +85,7 @@ class HotelWebsite(object):
                 data[nonstandard['name']] = self._format_field(nonstandard['type'], value)
         return data
 
-    def _get_results(self, response):
+    def _analyze_page(self, response):
         logging.info('_get_results: {0}'.format(self._name))
 
         soup = BeautifulSoup(response)
@@ -106,7 +106,7 @@ class HotelWebsite(object):
                 success = False
                 break
 
-        return response
+        return success
 
     # Public methods
     def check_availability(self, **kwargs):
@@ -120,8 +120,8 @@ class HotelWebsite(object):
         for p in self._pages:
             url_params = self._convert_fields(p.get('data'), **kwargs)
             response = self._visit_page(p.get('url'), url_params, method=p.get('method'))
-        results = self._get_results(response)
-        return results
+        result = self._analyze_page(response)
+        return result
 
     # Static and class methods
     @classmethod
