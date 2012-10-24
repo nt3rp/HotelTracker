@@ -1,7 +1,6 @@
 [{
     "name": "DoubleTree International",
     "short_name": "DoubleTree",
-    "availability_selector": "#roomViewRegularView",
     "fields": {
         "arrival": {
             "name": "arrivalDate",
@@ -15,6 +14,15 @@
     "formats": {
         "date": "%d %b %Y"
     },
+    "conditions": [{
+        "selector": "_text",
+        "pattern": ".*The requested rate is not available.*",
+        "found": false
+    }, {
+        "selector": "title",
+        "pattern": ".*Available Rooms.*",
+        "found": true
+    }],
     "pages" : [
         {
             "url": "https://secure3.hilton.com/en_US/dt/reservation/book.htm",
@@ -40,7 +48,7 @@
                 "promoCode": "",
                 "srpId": "",
                 "onlineValueRate": "",
-                "groupCode": "AME",
+                "groupCode": "ANM",
                 "corporateId": "",
                 "_rememberCorporateId": "on",
                 "_aaaRate": "on",

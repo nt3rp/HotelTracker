@@ -1,13 +1,16 @@
+import re
 import json
-import logging
 import urllib
+import logging
+
 from datetime import datetime
-from pyquery import PyQuery as pq
+from bs4 import BeautifulSoup
 
 class HotelWebsite(object):
     """Each hotel knows how to do a few things:
         - check it's availability
     """
+    REQUIRED_FIELDS = ('name', 'pages', 'fields', 'conditions')
 
     def __init__(self, opener, **kwargs):
         """Creates a new HotelWebsite instance.
@@ -21,9 +24,9 @@ class HotelWebsite(object):
             formats     : a dictionary of formats for different field types
             short_name  : short version of the display name
         """
-        if not all(test in kwargs for test in ('name', 'pages', 'fields')):
+        if not all(test in kwargs for test in self.REQUIRED_FIELDS):
             # Is there a simple way that we can both check this, and list the missing field?
-            raise ValueError('Missing one of \'name\', \'pages\', or \'fields\'')
+            raise ValueError('Missing one of required fields.')
 
         logging.info('__init__: {0}'.format(kwargs.get('name')))
 
@@ -31,6 +34,10 @@ class HotelWebsite(object):
             var = '_{key}'.format(key=k)
             setattr(self, var, v)
             logging.debug('HotelWebsite.{0} = {1}'.format(var, v))
+
+        # Pre-compile condition regexes
+        for condition in self._conditions:
+            condition['pattern'] = re.compile(condition['pattern'])
 
         # For now, use a global URL opener
         self.__opener = opener
@@ -79,7 +86,26 @@ class HotelWebsite(object):
         return data
 
     def _get_results(self, response):
-        logging.info('_get_results: Analyzing availability results')
+        logging.info('_get_results: {0}'.format(self._name))
+
+        soup = BeautifulSoup(response)
+
+        success = True
+        for condition in self._conditions:
+            selector = condition.get('selector')
+            pattern  = condition.get('pattern')
+            found    = condition.get('found')
+
+            if selector == "_text":
+                selector = True
+
+            result = soup.find(selector, text=pattern)
+            logging.debug('_get_results: soup result = {0}'.format(result))
+
+            if found != bool(result):
+                success = False
+                break
+
         return response
 
     # Public methods
