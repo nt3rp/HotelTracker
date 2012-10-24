@@ -24,11 +24,11 @@ def main():
     log_level = getattr(logging, arguments.get("log").upper(), None)
     logging.basicConfig(level=log_level)
 
-    logging.info("Creating cookie jar and URL opener")
+    logging.info("main: Creating cookie jar and URL opener")
     cookie_jar = cookielib.CookieJar()
     opener = create_url_opener(cookie_jar)
 
-    logging.info("Getting list of hotels")
+    logging.info("main: Getting list of hotels")
     hotels = HotelWebsite.from_json_file(opener, arguments["config"])
 
     for hotel in hotels:

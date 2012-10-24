@@ -21,19 +21,20 @@ class HotelWebsite(object):
             formats     : a dictionary of formats for different field types
             short_name  : short version of the display name
         """
-        logging.info('Creating new HotelWebsite')
         if not all(test in kwargs for test in ('name', 'pages', 'fields')):
             # Is there a simple way that we can both check this, and list the missing field?
             raise ValueError('Missing one of \'name\', \'pages\', or \'fields\'')
 
+        logging.info('__init__: {0}'.format(kwargs.get('name')))
+
         for k, v in kwargs.iteritems():
             var = '_{key}'.format(key=k)
             setattr(self, var, v)
-            logging.debug('set HotelWebsite.{0}: {1}'.format(var, v))
+            logging.debug('HotelWebsite.{0} = {1}'.format(var, v))
 
         # For now, use a global URL opener
         self.__opener = opener
-        logging.debug('set HotelWebsite.__opener: {0}'.format(opener))
+        logging.debug('HotelWebsite.__opener = {0}'.format(opener))
 
 
     # Private methods
@@ -42,18 +43,21 @@ class HotelWebsite(object):
         if data:
             data = urllib.urlencode(data)
 
-        #TODO: handle open errors
-        if method == 'POST':
-            response = self.__opener.open(url, data)
-            logging.info('Visited page {0} with {1} params'.format(url, data))
-        else:
-            url = url + '?' + data
-            response = self.__opener.open(url)
-            logging.info('Visiting page {0}'.format(url))
+        # Previously, we were doing a get request with parameters
+        # ...is this no longer necessary?
+
+        logging.info('_visit_page: url  = {0}'.format(url))
+        logging.info('_visit_page: data = {0}'.format(data))
+        response = self.__opener.open(url, data)
+
+        logging.debug('_visit_page: headers = {0}'.format(
+            unicode(response.info())
+        ))
+
         results = response.read()
-        logging.debug('_visit_page: response:\n{0}'.format(results))
-        logging.info('_visit_page: headers: {0}'.format(unicode(response.info())))
         response.close()
+
+        logging.debug('_visit_page: response = \n{0}'.format(results))
         return results
 
     def _format_field(self, type, value):
@@ -82,6 +86,10 @@ class HotelWebsite(object):
     def check_availability(self, **kwargs):
         if not all(test in kwargs for test in ('arrival', 'departure')):
             raise ValueError("Missing arrival or departure time")
+
+        logging.info("check_availability: {0}, {1}".format(
+            self._name, kwargs
+        ))
 
         for p in self._pages:
             url_params = self._convert_fields(p.get('data'), **kwargs)
