@@ -30,7 +30,7 @@ def main():
     hotels = HotelWebsite.from_json_file(opener, arguments["config"])
 
     if arguments["frequency"] <= 0:
-        check_hotels(hotels, arguments)
+        check_hotels(hotels, arguments, cookie_jar)
         return
 
     try:
