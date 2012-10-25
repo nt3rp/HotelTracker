@@ -1,10 +1,14 @@
+# -*- coding: utf-8 -*-
 import re
 import json
+import random
 import urllib
 import logging
 
+from collections import deque
 from datetime import datetime
 from bs4 import BeautifulSoup
+import twitter
 
 class HotelWebsite(object):
     """Each hotel knows how to do a few things:
@@ -56,11 +60,14 @@ class HotelWebsite(object):
         logging.info('_visit_page: url  = {0}'.format(url))
         logging.info('_visit_page: data = {0}'.format(data))
 
-        with self.__opener.open(url, data) as response:
-            logging.debug('_visit_page: headers = {0}'.format(
-                unicode(response.info())
-            ))
-            results = response.read()
+        # Can't do `with` here?
+        #     addinfourl instance has no attribute '__exit__'
+        response = self.__opener.open(url, data)
+        logging.debug('_visit_page: headers = {0}'.format(
+            unicode(response.info())
+        ))
+        results = response.read()
+        response.close()
 
         logging.debug('_visit_page: response = \n{0}'.format(results))
         return results
@@ -134,3 +141,124 @@ class HotelWebsite(object):
         return hotels
 
 
+class TwitterHotelMessager(object):
+    POST_ATTEMPTS = 3
+    START = {
+        "positive": [
+            "",
+            "Hooray! ", "Hooray; ",
+            "Success! ", "Success; "
+            "Huzzah! ", "Huzzah; "
+            "Yay! ", "Yay; "
+        ],
+        "negative": [
+            "",
+            "Boo! ", "Boo; ",
+            "Dang! ", "Dang; ",
+            "Fail! ", "Fail; "
+        ]
+    }
+    END = {
+        "positive":  ["", "!", ".", "…", "♪", "✔"],
+        "negative":  ["", "!", ".", "…", "✖"]
+    }
+
+
+    def __init__(self, json_path=None, atoken=None, asecret=None,
+                 ctoken=None, csecret=None):
+        if json_path:
+            with open(json_path, 'r') as f:
+                obj    = json.loads(f.read())
+                atoken  = obj.get('access_token')
+                asecret = obj.get('access_secret')
+                ctoken  = obj.get('consumer_token')
+                csecret = obj.get('consumer_secret')
+
+        # Twitter API code
+        self._api = twitter.Api(consumer_key=ctoken, consumer_secret=csecret,
+            access_token_key=atoken, access_token_secret=asecret)
+
+        if not self._api.VerifyCredentials():
+            raise ValueError("Could not connect to Twitter")
+
+        logging.info("__init__: Twitter credentials verified")
+
+        # Hotel code
+        self._hotels = {}
+
+    # Private functions
+    def _get_state(self, info, now=datetime.now()):
+        return {
+            'stale'  : self.is_stale(info['last_update'], now=now),
+            'changed': self.is_changed(*info['last_results'])
+        }
+
+    def _update_info(self, hotel, success, now=datetime.now()):
+        info = self._hotels.get(hotel, {
+            'last_update': None,
+            'last_results': deque([], maxlen=2),
+            'name': hotel
+        })
+        info['last_results'].append(success)
+        self._hotels[hotel] = info
+        return self._hotels[hotel]
+
+    def _post(self, info, message):
+        success = list(info['last_results'])[-1]
+
+        if success:
+            (num_rooms, tone) = ("at least one room", "positive")
+        else:
+            (num_rooms, tone) = ("no rooms", "negative")
+
+        unposted = True
+        attempts = 0
+        while unposted and (attempts < self.POST_ATTEMPTS):
+            f_message = message.format(
+                hotel=info['name'],
+                num_rooms=num_rooms,
+                start=random.choice(self.START[tone]),
+                end=random.choice(self.END[tone])
+            )
+            logging.info('_post: {0}'.format(f_message))
+
+            try:
+                status = self._api.PostUpdate(f_message)
+            except twitter.TwitterError, e:
+                logging.error('_post: {0}'.format(e))
+                attempts += 1
+            else:
+                logging.info('_post: {0}'.format(status))
+                unposted = False
+
+    def _post_stale(self, info):
+        self._post(info, "{hotel}: {start}still {num_rooms} available{end}")
+
+    def _post_changed(self, info):
+        self._post(info, "{hotel}: {start}{num_rooms} available{end}")
+
+    # Public functions
+    def update(self, hotel, success):
+        now   = datetime.now()
+        info  = self._update_info(hotel, success, now)
+
+        state = self._get_state(info, now)
+        if state['changed'] or not info['last_update']:
+            self._post_changed(info)
+            info['last_update'] = now
+        elif state['stale']:
+            self._post_stale(info)
+            info['last_update'] = now
+        else:
+            logging.info("update: No need to update")
+
+    # Static and class methods
+    @staticmethod
+    def is_changed(prev=False, next=False):
+        return prev != next
+
+    @staticmethod
+    def is_stale(last_update, now=datetime.now(), stale_duration=14400):
+        if not last_update:
+            return False
+        return (now - last_update).seconds >= stale_duration
