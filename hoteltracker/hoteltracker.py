@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import argparse
 import cookielib
 import logging
 import sys
+import time
+from twitter import TwitterError
 from models import HotelWebsite, TwitterHotelMessager
 from util import create_url_opener, check_hotels
 
@@ -56,11 +59,15 @@ def main():
         check_hotels(hotels, arguments, cookie_jar, messager)
         return
 
-    try:
-        while True:
+    while True:
+        try:
             check_hotels(hotels, arguments, cookie_jar, messager)
-    except KeyboardInterrupt:
-        print '\nKeyboardInterrupt received. Halting...'
+            time.sleep(arguments["frequency"] * 60)
+        except KeyboardInterrupt:
+            print '\nKeyboardInterrupt received. Halting...'
+            break
+        except TwitterError, e:
+            logging.error(e)
 
 if __name__ == '__main__':
     sys.exit(main())

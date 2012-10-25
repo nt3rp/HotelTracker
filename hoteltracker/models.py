@@ -1,9 +1,11 @@
-from collections import deque
+# -*- coding: utf-8 -*-
 import re
 import json
+import random
 import urllib
 import logging
 
+from collections import deque
 from datetime import datetime
 from bs4 import BeautifulSoup
 import twitter
@@ -140,6 +142,28 @@ class HotelWebsite(object):
 
 
 class TwitterHotelMessager(object):
+    POST_ATTEMPTS = 3
+    START = {
+        "positive": [
+            "",
+            "Hooray! ", "Hooray; ",
+            "Success! ", "Success; "
+            "Huzzah! ", "Huzzah; "
+            "Yay! ", "Yay; "
+        ],
+        "negative": [
+            "",
+            "Boo! ", "Boo; ",
+            "Dang! ", "Dang; ",
+            "Fail! ", "Fail; "
+        ]
+    }
+    END = {
+        "positive":  ["", "!", ".", "…", "♪", "✔"],
+        "negative":  ["", "!", ".", "…", "✖"]
+    }
+
+
     def __init__(self, json_path=None, atoken=None, asecret=None,
                  ctoken=None, csecret=None):
         if json_path:
@@ -183,20 +207,35 @@ class TwitterHotelMessager(object):
         success = list(info['last_results'])[-1]
 
         if success:
-            num_rooms = "at least one room"
+            (num_rooms, tone) = ("at least one room", "positive")
         else:
-            num_rooms = "no rooms"
+            (num_rooms, tone) = ("no rooms", "negative")
 
-        f_message = message.format(hotel=info['name'], num_rooms=num_rooms)
-        logging.info(f_message)
-        self._api.PostUpdate(f_message)
+        unposted = True
+        attempts = 0
+        while unposted and (attempts < self.POST_ATTEMPTS):
+            f_message = message.format(
+                hotel=info['name'],
+                num_rooms=num_rooms,
+                start=random.choice(self.START[tone]),
+                end=random.choice(self.END[tone])
+            )
+            logging.info('_post: {0}'.format(f_message))
 
+            try:
+                status = self._api.PostUpdate(f_message)
+            except twitter.TwitterError, e:
+                logging.error('_post: {0}'.format(e))
+                attempts += 1
+            else:
+                logging.info('_post: {0}'.format(status))
+                unposted = False
 
     def _post_stale(self, info):
-        self._post(info, "{hotel}: Sorry, still {num_rooms} available")
+        self._post(info, "{hotel}: {start}still {num_rooms} available{end}")
 
     def _post_changed(self, info):
-        self._post(info, "{hotel}: {num_rooms} available")
+        self._post(info, "{hotel}: {start}{num_rooms} available{end}")
 
     # Public functions
     def update(self, hotel, success):

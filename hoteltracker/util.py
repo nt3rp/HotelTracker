@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 import cookielib
 import urllib2
-import time
 
 def create_url_opener(cookie_jar=None):
     if cookie_jar is None:
@@ -13,7 +13,6 @@ def check_hotels(hotels, arguments, cookie_jar, messager):
     for hotel in hotels:
         available = hotel.is_available(**arguments)
         messager.update(hotel._name, available)
-        time.sleep(arguments["frequency"] * 60)
 
         # Clear all cookies after visiting a hotel
         cookie_jar.clear()
