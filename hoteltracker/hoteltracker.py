@@ -5,6 +5,7 @@ import cookielib
 import logging
 import sys
 import time
+from urllib2 import URLError
 from twitter import TwitterError
 from models import HotelWebsite, TwitterHotelMessager
 from util import create_url_opener, check_hotels
@@ -65,6 +66,8 @@ def main():
         except KeyboardInterrupt:
             print '\nKeyboardInterrupt received. Halting...'
             break
+        except URLError, e:
+            logging.error(e)
         except TwitterError, e:
             logging.error(e)
 
