@@ -5,11 +5,21 @@ class TestHotelWebsiteSetup(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_no_args_constructor(self):
+    def test_constructor_no_args(self):
         self.assertRaises(ValueError, HotelWebsite)
 
-    def test_missing_pages_argument_constructor(self):
+    def test_constructor_missing_pages_argument(self):
         self.assertRaises(ValueError, HotelWebsite, banana='test')
+
+    def test_constructor_page_arg_is_not_iterable(self):
+        self.assertRaises(TypeError, HotelWebsite, pages=1)
+
+    def test_constructor_keys_are_protected(self):
+        hotel = HotelWebsite(pages='page')
+        def access_pages():
+            x = hotel.pages
+        self.assertRaises(AttributeError, access_pages)
+        x = hotel._pages # Should not raise an exception
 
     # TODO: Verify we get arguments we're expecting
 
