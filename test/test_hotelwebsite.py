@@ -30,14 +30,6 @@ class TestHotelWebsiteFunctions(unittest.TestCase):
     def test_is_available_no_args(self):
         self.assertRaises(ValueError, self.hotel.is_available)
 
-    def test_is_available_no_arrival(self):
-        self.assertRaises(ValueError, self.hotel.is_available,
-            departure='banana')
-
-    def test_is_available_no_departure(self):
-        self.assertRaises(ValueError, self.hotel.is_available,
-            arrival='banana')
-
     # TODO: Verify we get arguments we're expecting (e.g. dates, or date strings)
 
 
