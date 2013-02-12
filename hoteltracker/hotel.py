@@ -9,7 +9,7 @@ import urllib2
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-class HotelWebsite:
+class HotelWebsite(object):
     REQUIRED_ARGS = ('name', 'pages', 'parameters', 'conditions')
 
     # TODO: Do we really need kwargs? Why not just define the kwargs?
@@ -98,13 +98,13 @@ class HotelWebsite:
     def _visit(self, page, get=None, post=None):
         url = page.get('url')
 
-        if post:
-            post = urllib.urlencode(post)
-
         # TODO: Verify that no other get params are included
         # Alternatively, parse them out and add them again
         if get:
             url = '{0}?{1}'.format(url, urllib.urlencode(get))
+
+        if post:
+            post = urllib.urlencode(post)
 
         with contextlib.closing(self.__opener.open(url, post)) as opener:
             results = opener.read()
