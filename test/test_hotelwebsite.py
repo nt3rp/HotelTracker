@@ -12,10 +12,20 @@ class TestHotelWebsiteSetup(unittest.TestCase):
         self.assertRaises(ValueError, HotelWebsite, banana='test')
 
     def test_constructor_page_arg_is_not_iterable(self):
-        self.assertRaises(TypeError, HotelWebsite, pages=1)
+        self.assertRaises(TypeError, HotelWebsite, **{
+            'name': '',
+            'parameters': '',
+            'pages': 1,
+            'conditions': []
+        })
 
     def test_constructor_keys_are_protected(self):
-        hotel = HotelWebsite(pages='page')
+        hotel = HotelWebsite(**{
+            'name': '',
+            'parameters': '',
+            'pages': [],
+            'conditions': []
+        })
         def access_pages():
             x = hotel.pages
         self.assertRaises(AttributeError, access_pages)
@@ -25,7 +35,12 @@ class TestHotelWebsiteSetup(unittest.TestCase):
 
 class TestHotelWebsiteFunctions(unittest.TestCase):
     def setUp(self):
-        self.hotel = HotelWebsite(pages=[])
+        self.hotel = HotelWebsite(**{
+            'name': '',
+            'parameters': '',
+            'pages': [],
+            'conditions': []
+        })
 
     def test_is_available_no_args(self):
         self.assertRaises(ValueError, self.hotel.is_available)

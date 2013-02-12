@@ -10,9 +10,12 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 class HotelWebsite:
+    REQUIRED_ARGS = ('name', 'pages', 'parameters', 'conditions')
+
     # TODO: Do we really need kwargs? Why not just define the kwargs?
     def __init__(self, *args, **kwargs):
-        if not all(field in kwargs for field in ('pages', )):
+        if not all(field in kwargs for field in self.REQUIRED_ARGS):
+            # TODO: How to list /which/ missing args?
             raise ValueError('Missing required arguments')
 
         for key, value in kwargs.iteritems():
