@@ -8,6 +8,7 @@ import urllib
 import urllib2
 from bs4 import BeautifulSoup
 from datetime import datetime
+from hoteltracker.utils import list_missing_args
 
 class HotelWebsite(object):
     REQUIRED_ARGS = ('name', 'pages', 'parameters', 'conditions')
@@ -15,8 +16,9 @@ class HotelWebsite(object):
     # TODO: Do we really need kwargs? Why not just define the kwargs?
     def __init__(self, *args, **kwargs):
         if not all(field in kwargs for field in self.REQUIRED_ARGS):
-            # TODO: How to list /which/ missing args?
-            raise ValueError('Missing required arguments')
+            error = list_missing_args(self.REQUIRED_ARGS, kwargs,
+                message='Missing argument{s}: {args}')
+            raise ValueError(error)
 
         for key, value in kwargs.iteritems():
             new_key = '_{key}'.format(key=key)

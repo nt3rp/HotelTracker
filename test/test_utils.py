@@ -29,13 +29,13 @@ class TestUtils(unittest.TestCase):
         expected = "Missing argument: c"
         actual = list_missing_args(required=('a','b','c'),
             provided=('a','b'),
-            message='Missing argument{s}: {arguments}')
+            message='Missing argument{s}: {args}')
         self.assertEqual(expected, actual)
 
     def test_list_required_argument_with_plural_message(self):
         expected = "Missing arguments: a, c"
         actual = list_missing_args(required=('a','b','c'),
             provided='b',
-            message='Missing argument{s}: {arguments}')
+            message='Missing argument{s}: {args}')
         self.assertEqual(expected, actual)
 

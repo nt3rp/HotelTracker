@@ -4,5 +4,5 @@ def list_missing_args(required=(), provided=(), message=None):
     if not message:
         return difference
 
-    return message.format(arguments=', '.join(difference),
+    return message.format(args=', '.join(difference),
         s='s'[len(difference)==1:])
