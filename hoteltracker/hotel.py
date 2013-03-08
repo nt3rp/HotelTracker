@@ -81,8 +81,8 @@ class HotelWebsite(object):
         success = True
         for condition in self._conditions:
             selector = condition.get('selector')
-            pattern  = condition.get('pattern')
-            found    = condition.get('found')
+            pattern = condition.get('pattern')
+            found = condition.get('found')
 
             if selector == "_text":
                 selector = True
