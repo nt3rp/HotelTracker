@@ -39,6 +39,9 @@ class HotelWebsite(object):
             self.__cookie_jar = kwargs.get('cookie_jar')
             self.__opener = kwargs.get('opener')
 
+        # TODO: Replace calls with `urllib2.urlopen` after urllib
+        # .install_opener?
+
 
     def is_available(self, *args, **kwargs):
         if not all(field in kwargs for field in ('arrival', 'departure')):

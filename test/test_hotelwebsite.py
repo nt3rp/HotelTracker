@@ -47,6 +47,7 @@ class TestHotelWebsiteFunctions(unittest.TestCase):
 
     # TODO: Verify we get arguments we're expecting (e.g. dates, or date strings)
 
+# TODO: Make a more 'real' unit test that mocks URL requests, etc.
 
 if __name__ == '__main__':
     unittest.main()
