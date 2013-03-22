@@ -2,8 +2,8 @@ from hoteltracker import HotelWebsite
 
 #TODO: For now, just do the Doubletree International Toronto
 class Doubletree(HotelWebsite):
-    def __init__(self):
-        super(HotelWebsite, self).__init__(**{
+    def __init__(self, *args, **kwargs):
+        default_args = {
             'name': 'DoubleTree International',
             'short_name': 'DoubleTree',
             'parameters': {
@@ -66,4 +66,6 @@ class Doubletree(HotelWebsite):
                     'execution': 'e5s2'
                 }
             }]
-        })
+        }
+
+        super(Doubletree, self).__init__(**default_args)

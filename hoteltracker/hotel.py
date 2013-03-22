@@ -56,11 +56,14 @@ class HotelWebsite(object):
         return self._analyze_response(response)
 
     def _convert_params(self, data, params):
+        if not data:
+            return params
+
         """Convert `params` to a format the site expects"""
         for key, value in params.iteritems():
             nonstandard = self._parameters.get(key)
             if nonstandard and nonstandard['name'] in data.keys():
-                field = self._format_field(nonstandard.get('type'), value)
+                field = self._format_param(nonstandard.get('type'), value)
                 data[nonstandard['name']] = field
         return data
 
