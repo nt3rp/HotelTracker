@@ -8,8 +8,9 @@ def main():
     logger = logging.getLogger('hotel_tracker')
     logger.setLevel(logging.DEBUG)
 
-    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(log_format)
+    log_format = '[%(asctime)s] {%(module)s.py:%(funcName)s:%(lineno)d} ' \
+                 '%(levelname)s %(name)s - %(message)s'
+    formatter = logging.Formatter(log_format,'%Y-%m-%d %H:%M:%S')
 
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)

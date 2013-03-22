@@ -30,6 +30,7 @@ class HotelWebsite(object):
 
         # Pre-compile condition regexes
         for condition in self._conditions:
+            condition['pattern_str'] = condition.get('pattern')
             condition['pattern'] = re.compile(condition.get('pattern'))
 
         if not all(x in kwargs for x in ('opener', 'cookie_jar')):
@@ -43,27 +44,37 @@ class HotelWebsite(object):
         # TODO: Replace calls with `urllib2.urlopen` after urllib
         # .install_opener?
 
-        self.logger = logging.getLogger('hotel_tracker.hotel')
-        self.logger.debug('Creating new instance', extra={'tweet': True})
+        logger_name = 'hotel_tracker.{0}'.format(self._name)
+        self.logger = logging.getLogger(logger_name)
+        self.logger.debug('Created new instance')
 
 
     def is_available(self, *args, **kwargs):
         if not all(field in kwargs for field in ('arrival', 'departure')):
             raise ValueError('Missing required arguments')
+        self.logger.debug('kwargs: {0}'.format(kwargs))
 
         for page in self._pages:
+            self.logger.debug('page: {0}'.format(page))
+
             get = self._convert_params(page.get('GET'), kwargs)
+            self.logger.debug('GET: {0}'.format(get))
+
             post = self._convert_params(page.get('POST'), kwargs)
+            self.logger.debug('POST: {0}'.format(post))
+
             response = self._visit(page, get, post)
+            self.logger.debug('Response: {0}'.format(response))
 
         self.__cookie_jar.clear()
-        return self._analyze_response(response)
+        result = self._analyze_response(response)
+        return result
 
     def _convert_params(self, data, params):
+        """Convert `params` to a format the site expects"""
         if not data:
             return params
 
-        """Convert `params` to a format the site expects"""
         for key, value in params.iteritems():
             nonstandard = self._parameters.get(key)
             if nonstandard and nonstandard['name'] in data.keys():
@@ -92,6 +103,8 @@ class HotelWebsite(object):
 
         success = True
         for condition in self._conditions:
+            self.logger.debug('Condition: {0}'.format(condition))
+
             selector = condition.get('selector')
             pattern = condition.get('pattern')
             found = condition.get('found')
@@ -117,6 +130,9 @@ class HotelWebsite(object):
 
         if post:
             post = urllib.urlencode(post)
+
+        self.logger.debug('URL: {0}'.format(url))
+        self.logger.debug('POST: {0}'.format(post))
 
         with contextlib.closing(self.__opener.open(url, post)) as opener:
             results = opener.read()
