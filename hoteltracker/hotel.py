@@ -3,6 +3,7 @@ import collections
 import contextlib
 import cookielib
 import json
+import logging
 import re
 import urllib
 import urllib2
@@ -41,6 +42,9 @@ class HotelWebsite(object):
 
         # TODO: Replace calls with `urllib2.urlopen` after urllib
         # .install_opener?
+
+        self.logger = logging.getLogger('hotel_tracker.hotel')
+        self.logger.debug('Creating new instance', extra={'tweet': True})
 
 
     def is_available(self, *args, **kwargs):
