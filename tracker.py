@@ -16,9 +16,6 @@ def main():
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
 
-    twitter_handler = TwitterHandler()
-    logger.addHandler(twitter_handler)
-
     parser = argparse.ArgumentParser(description='Try to find out if there is vacancy at a hotel.');
     parser.add_argument(
         '--arrival',
@@ -28,9 +25,17 @@ def main():
         '--departure',
         required=True,
         help='The day you will be departing.')
+    parser.add_argument(
+        '--twitter-config',
+        required=False,
+        help='Path to Twitter JSON.')
 
     args, unknown = parser.parse_known_args()
     args = vars(args)
+
+    if args.get('twitter-config'):
+        twitter_handler = TwitterHandler(config=args.get('twitter-config'))
+        logger.addHandler(twitter_handler)
 
     hotel = Doubletree()
 
