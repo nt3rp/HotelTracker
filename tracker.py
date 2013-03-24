@@ -1,6 +1,9 @@
 import argparse
 import logging
 import sys
+import time
+from urllib2 import URLError
+from twitter import TwitterError
 from hoteltracker.hotels import Doubletree
 from hoteltracker.utils import TwitterHotelMessager
 
@@ -29,21 +32,41 @@ def main():
         '--twitter-config',
         required=False,
         help='Path to Twitter JSON.')
+    parser.add_argument(
+        '--frequency',
+        type=float,
+        default=5,
+        help='How often (in minutes) to check for hotel availability. Defaults to every 5 minutes.')
 
     args, unknown = parser.parse_known_args()
     args = vars(args)
 
-    if True: #args.get('twitter-config'):
-        config = args.get('twitter-config', './data/twitter.json')
+    if args.get('twitter_config'):
         twitter_handler = TwitterHotelMessager(
-            config_path=config
+            config_path=args.get('twitter_config')
         )
 
     hotels = [Doubletree()]
 
-    for hotel in hotels:
-        available = hotel.is_available(**args)
-        twitter_handler.update(hotel._name, available)
+    frequency = args.get('frequency')
+    while True:
+        try:
+            for hotel in hotels:
+                available = hotel.is_available(**args)
+                logger.info('{0}: Available? {1}'.format(hotel._name, available))
+                twitter_handler.update(hotel._name, available)
+
+            if frequency == 0:
+                break
+
+            time.sleep(frequency * 60)
+        except KeyboardInterrupt:
+            print '\nKeyboardInterrupt received. Halting...'
+            break
+        except (URLError, TwitterError), e:
+            logger.error(e)
+        except Exception, e2:
+            logger.error('Unexpected Error: {0}'.format(e2))
 
 
 if __name__ == '__main__':
