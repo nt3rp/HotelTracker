@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 from hoteltracker.hotels import Doubletree
-from hoteltracker.utils import TwitterHandler
+from hoteltracker.utils import TwitterHotelMessager
 
 def main():
     logger = logging.getLogger('hotel_tracker')
@@ -33,13 +33,17 @@ def main():
     args, unknown = parser.parse_known_args()
     args = vars(args)
 
-    if args.get('twitter-config'):
-        twitter_handler = TwitterHandler(config=args.get('twitter-config'))
-        logger.addHandler(twitter_handler)
+    if True: #args.get('twitter-config'):
+        config = args.get('twitter-config', './data/twitter.json')
+        twitter_handler = TwitterHotelMessager(
+            config_path=config
+        )
 
-    hotel = Doubletree()
+    hotels = [Doubletree()]
 
-    hotel.is_available(**args)
+    for hotel in hotels:
+        available = hotel.is_available(**args)
+        twitter_handler.update(hotel._name, available)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from collections import deque
+from datetime import datetime
 import json
 import logging
 import random
 import twitter
-from datetime import datetime
 
 def list_missing_args(required=(), provided=(), message=None):
     difference = set(required) - set(provided)
@@ -15,15 +15,15 @@ def list_missing_args(required=(), provided=(), message=None):
     return message.format(args=', '.join(difference),
         s='s'[len(difference)==1:])
 
-class TwitterHandler(logging.Handler):
+class TwitterHotelMessager(object):
     POST_ATTEMPTS = 3
     START = {
         "positive": [
             "",
             "Hooray! ", "Hooray; ",
             "Success! ", "Success; "
-                         "Huzzah! ", "Huzzah; "
-                                     "Yay! ", "Yay; "
+            "Huzzah! ", "Huzzah; "
+            "Yay! ", "Yay; "
         ],
         "negative": [
             "",
@@ -37,46 +37,29 @@ class TwitterHandler(logging.Handler):
         "negative":  ["", "!", ".", "…", "✖"]
     }
 
-    def __init__(self, config=None, atoken=None, asecret=None,
-                 ctoken=None, csecret=None, **kwargs):
-        logging.Handler.__init__(self, **kwargs)
 
-        if kwargs.get('config'):
-            with open(kwargs.get('config'), 'r') as f:
+    def __init__(self, config_path=None, atoken=None, asecret=None,
+                 ctoken=None, csecret=None):
+        if config_path:
+            with open(config_path, 'r') as f:
                 obj    = json.loads(f.read())
                 atoken  = obj.get('access_token')
                 asecret = obj.get('access_secret')
                 ctoken  = obj.get('consumer_token')
                 csecret = obj.get('consumer_secret')
 
-        # TODO: Do something if missing tokens
-
         # Twitter API code
-        self._api = twitter.Api(
-            consumer_key=ctoken,
-            consumer_secret=csecret,
-            access_token_key=atoken,
-            access_token_secret=asecret)
+        self._api = twitter.Api(consumer_key=ctoken, consumer_secret=csecret,
+            access_token_key=atoken, access_token_secret=asecret)
 
         if not self._api.VerifyCredentials():
             raise ValueError("Could not connect to Twitter")
 
-    def emit(self, record):
-        if getattr(record, 'tweet', False):
-            hotel = getattr(record, 'hotel')
-            success = getattr(record, 'success')
-            now = datetime.now()
-            info = self._update_info(hotel, success, now)
+        self.logger = logging.getLogger('hotel_tracker.twitter')
+        self.logger.debug("Twitter credentials verified")
 
-            state = self._get_state(info, now)
-            if state['changed'] or not info['last_update']:
-                self._post_changed(info)
-                info['last_update'] = now
-            elif state['stale']:
-                self._post_stale(info)
-                info['last_update'] = now
-            else:
-                logging.info("update: No need to update")
+        # Hotel code
+        self._hotels = {}
 
     # Private functions
     def _get_state(self, info, now=datetime.now()):
@@ -112,15 +95,15 @@ class TwitterHandler(logging.Handler):
                 start=random.choice(self.START[tone]),
                 end=random.choice(self.END[tone])
             )
-            logging.info('_post: {0}'.format(f_message))
+            self.logger.debug(f_message)
 
             try:
                 status = self._api.PostUpdate(f_message)
             except twitter.TwitterError, e:
-                logging.error('_post: {0}'.format(e))
+                self.logger.error(e)
                 attempts += 1
             else:
-                logging.info('_post: {0}'.format(status))
+                self.logger.debug(status)
                 unposted = False
 
     def _post_stale(self, info):
@@ -142,7 +125,7 @@ class TwitterHandler(logging.Handler):
             self._post_stale(info)
             info['last_update'] = now
         else:
-            logging.info("update: No need to update")
+            self.logger.debug("update: No need to update")
 
     # Static and class methods
     @staticmethod
