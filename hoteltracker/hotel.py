@@ -55,7 +55,7 @@ class HotelWebsite(object):
         self.logger.debug('kwargs: {0}'.format(kwargs))
 
         for page in self._pages:
-            self.logger.debug('page: {0}'.format(page))
+            self.logger.info('page: {0}'.format(page))
 
             get = self._convert_params(page.get('GET'), kwargs)
             self.logger.debug('GET: {0}'.format(get))
@@ -105,6 +105,8 @@ class HotelWebsite(object):
         for condition in self._conditions:
             self.logger.debug('Condition: {0}'.format(condition))
 
+            # Right now, only can do tags; not CSS selectors
+            # Needs to be more sophisticated
             selector = condition.get('selector')
             pattern = condition.get('pattern')
             found = condition.get('found')
