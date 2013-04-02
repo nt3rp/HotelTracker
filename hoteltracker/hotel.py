@@ -8,8 +8,11 @@ import re
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
+import soupselect
 from datetime import datetime
 from hoteltracker.utils import list_missing_args
+
+soupselect.monkeypatch()
 
 class HotelWebsite(object):
     REQUIRED_ARGS = ('name', 'pages', 'parameters', 'conditions')
@@ -112,9 +115,9 @@ class HotelWebsite(object):
             found = condition.get('found')
 
             if selector == "_text":
-                selector = True
-
-            result = soup.find(selector, text=pattern)
+                result = soup.find(True, text=pattern)
+            else:
+                result = soup.findSelect(selector)
 
             if found != bool(result):
                 success = False

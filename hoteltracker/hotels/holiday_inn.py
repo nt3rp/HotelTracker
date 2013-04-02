@@ -8,11 +8,11 @@ class HolidayInn(HotelWebsite):
             'short_name': 'HolidayInn',
             'parameters': {
                 'arrival': {
-                    'name': 'checkInDt',
+                    'name': 'checkInDate',
                     'type': 'date'
                 },
                 'departure': {
-                    'name': 'checkOutDt',
+                    'name': 'checkOutDate',
                     'type': 'date'
                 }
             },
@@ -24,34 +24,38 @@ class HolidayInn(HotelWebsite):
                 'pattern': '.*There are no rooms available for your requested travel criteria.*',
                 'found': False
             }, {
-                'selector': 'title',
+                'selector': '.ratesListing',
                 # Needs to be a `.ratesListing` inside a `.simpleRate`
                 'pattern': '.*Available Rooms.*',
                 'found': True
             }],
             'pages': [{
-                'url': 'http://www.ihg.com/holidayinn/hotels/us/en/reservation/roomrate',
-                'GET': {
-                    'execution': 'e1s1',
-                    'hotelCode': 'yyzae',
-                    'numberOfRooms': '1',
-                    'numberOfAdults': '1',
-                    'ratePreference': '6CBARC',
-                    'numberOfChildren': '0',
-                    'execute': 'basic'
+                'url': 'http://www.ihg.com/holidayinn/hotels/us/en/toronto/yyzae/bookthishotel',
+                'POST': {
+                    "parentController": "/holidayinn/hotels/us/en/toronto/yyzae/hoteldetail",
+                    "includedView": "bookthishotel",
+                    "checkInDate": "Apr-01-2013",
+                    "checkOutDate": "Apr-02-2013",
+                    "adultsCount": "1",
+                    "childrenCount": "0",
+                    "roomsCount": "1",
+                    "groupCode": "", #Need Group Code!
+                    "corporateId": "",
+                    "ratePreference": "6CBARC"
                 }
             }, {
-                'url': 'http://www.ihg.com/holidayinn/hotels/us/en/reservation/roomrate',
+                'url': 'http://www.ihg.com/holidayinn/hotels/us/en/toronto/yyzae/bookthishotel',
                 'POST': {
-                    'execution': 'e1s1',
-                    'hotelCode': 'yyzae',
-                    'ratePreference': '6CBARC',
-                    'adultsCount': '1',
-                    'childrenCount': '0',
-                    'roomsCount': '1',
-                    'execute': 'basic',
-                    'actionName': 'modifySearch',
-                    'modifySearch': 'yourRate'
+                    "parentController": "/holidayinn/hotels/us/en/toronto/yyzae/hoteldetail",
+                    "includedView": "bookthishotel",
+                    "checkInDate": "Apr-01-2013",
+                    "checkOutDate": "Apr-02-2013",
+                    "adultsCount": "1",
+                    "childrenCount": "0",
+                    "roomsCount": "1",
+                    "groupCode": "", #Group Code!
+                    "corporateId": "",
+                    "ratePreference": "6CBARC"
                 }
             }]
         }
