@@ -4,7 +4,7 @@ import sys
 import time
 from urllib2 import URLError
 from twitter import TwitterError
-from hoteltracker.hotels import Doubletree, HolidayInn
+from hoteltracker.hotels import Doubletree, HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational
 from hoteltracker.utils import TwitterHotelMessager
 
 def main():
@@ -52,7 +52,8 @@ def main():
 
     hotels = [
         #Doubletree(),
-        HolidayInn()
+        HolidayInnAirportEast(),
+        HolidayInnTorontoInternational()
     ]
 
     frequency = args.get('frequency')
