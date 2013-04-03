@@ -24,9 +24,8 @@ class HolidayInn(HotelWebsite):
                 'pattern': '.*There are no rooms available for your requested travel criteria.*',
                 'found': False
             }, {
-                'selector': '.ratesListing',
-                # Needs to be a `.ratesListing` inside a `.simpleRate`
-                'pattern': '.*Available Rooms.*',
+                'selector': '.ratesListing .roomEntry',
+                'pattern': '.*',
                 'found': True
             }],
             'pages': [{
