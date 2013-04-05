@@ -19,6 +19,11 @@ class HolidayInn(HotelWebsite):
             # TODO: ERROR?
             pass
 
+        if kwargs.get('group_code'):
+            group_code = kwargs.get('group_code')
+        else:
+            group_code = ''
+
         # For whatever reason, we need to visit the same page twice; I think
         # the first time is to just set a cookie...
         page = {
@@ -31,7 +36,7 @@ class HolidayInn(HotelWebsite):
                 "adultsCount": "1",
                 "childrenCount": "0",
                 "roomsCount": "1",
-                "groupCode": "", #Need Group Code!
+                "groupCode": group_code,
                 "corporateId": "",
                 "ratePreference": "6CBARC"
             }
@@ -77,4 +82,5 @@ class HolidayInnTorontoInternational(HolidayInn):
     def __init__(self):
         super(HolidayInnTorontoInternational, self).__init__(
             name='Holiday Inn Toronto International',
-            hotel_code='toronto/yyzia')
+            hotel_code='toronto/yyzia',
+            group_code='AEN')
