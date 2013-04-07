@@ -1,7 +1,7 @@
 from hoteltracker import HotelWebsite
 
 #TODO: For now, just do the Doubletree International Toronto
-class Doubletree(HotelWebsite):
+class DoubletreeInternationalPlaza(HotelWebsite):
     def __init__(self, *args, **kwargs):
         default_args = {
             'name': 'DoubleTree International',
@@ -68,4 +68,4 @@ class Doubletree(HotelWebsite):
             }]
         }
 
-        super(Doubletree, self).__init__(**default_args)
+        super(DoubletreeInternationalPlaza, self).__init__(**default_args)
