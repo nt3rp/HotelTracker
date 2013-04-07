@@ -51,7 +51,7 @@ def main():
 
 
     hotels = [
-        #Doubletree(),
+        Doubletree(),
         HolidayInnAirportEast(),
         HolidayInnTorontoInternational()
     ]

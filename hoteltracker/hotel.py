@@ -108,8 +108,6 @@ class HotelWebsite(object):
         for condition in self._conditions:
             self.logger.debug('Condition: {0}'.format(condition))
 
-            # Right now, only can do tags; not CSS selectors
-            # Needs to be more sophisticated
             selector = condition.get('selector')
             pattern = condition.get('pattern')
             found = condition.get('found')
