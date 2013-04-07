@@ -4,12 +4,12 @@ import sys
 import time
 from urllib2 import URLError
 from twitter import TwitterError
-from hoteltracker.hotels import Doubletree
+from hoteltracker.hotels import Doubletree, HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational
 from hoteltracker.utils import TwitterHotelMessager
 
 def main():
     logger = logging.getLogger('hotel_tracker')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     log_format = '[%(asctime)s] {%(module)s.py:%(funcName)s:%(lineno)d} ' \
                  '%(levelname)s %(name)s - %(message)s'
@@ -41,12 +41,20 @@ def main():
     args, unknown = parser.parse_known_args()
     args = vars(args)
 
+    handlers = []
+
     if args.get('twitter_config'):
         twitter_handler = TwitterHotelMessager(
             config_path=args.get('twitter_config')
         )
+        handlers.append(twitter_handler)
 
-    hotels = [Doubletree()]
+
+    hotels = [
+        Doubletree(),
+        HolidayInnAirportEast(),
+        HolidayInnTorontoInternational()
+    ]
 
     frequency = args.get('frequency')
     while True:
@@ -54,7 +62,9 @@ def main():
             for hotel in hotels:
                 available = hotel.is_available(**args)
                 logger.info('{0}: Available? {1}'.format(hotel._name, available))
-                twitter_handler.update(hotel._name, available)
+
+                for handler in handlers:
+                    handler.update(hotel._name, available)
 
             if frequency == 0:
                 break

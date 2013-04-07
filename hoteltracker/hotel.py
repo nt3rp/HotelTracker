@@ -8,8 +8,11 @@ import re
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
+import soupselect
 from datetime import datetime
 from hoteltracker.utils import list_missing_args
+
+soupselect.monkeypatch()
 
 class HotelWebsite(object):
     REQUIRED_ARGS = ('name', 'pages', 'parameters', 'conditions')
@@ -55,7 +58,7 @@ class HotelWebsite(object):
         self.logger.debug('kwargs: {0}'.format(kwargs))
 
         for page in self._pages:
-            self.logger.debug('page: {0}'.format(page))
+            self.logger.info('page: {0}'.format(page))
 
             get = self._convert_params(page.get('GET'), kwargs)
             self.logger.debug('GET: {0}'.format(get))
@@ -110,9 +113,9 @@ class HotelWebsite(object):
             found = condition.get('found')
 
             if selector == "_text":
-                selector = True
-
-            result = soup.find(selector, text=pattern)
+                result = soup.find(True, text=pattern)
+            else:
+                result = soup.findSelect(selector)
 
             if found != bool(result):
                 success = False
