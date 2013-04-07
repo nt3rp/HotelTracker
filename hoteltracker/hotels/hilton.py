@@ -1,11 +1,39 @@
 from hoteltracker import HotelWebsite
 
-#TODO: For now, just do the Doubletree International Toronto
-class DoubletreeInternationalPlaza(HotelWebsite):
+
+class Hilton(HotelWebsite):
     def __init__(self, *args, **kwargs):
+        if kwargs.get('hotel_code'):
+            # Use the actual hotel code
+            hotel = kwargs.get('hotel_code')
+        else:
+            # TODO: ERROR!
+            pass
+
+        if kwargs.get('name'):
+            name = kwargs.get('name')
+        else:
+            # TODO: ERROR?
+            pass
+
+        if kwargs.get('hotel_type'):
+            type = kwargs.get('hotel_type')
+        else:
+            # TODO: ERROR!
+            pass
+
+        if kwargs.get('group_code') is not None:
+            code = kwargs.get('group_code')
+        else:
+            # TODO: ERROR?
+            pass
+
+        root_url = 'https://secure3.hilton.com/en_US/{0}/reservation/book' \
+                   '.htm'.format(type)
+
         default_args = {
-            'name': 'DoubleTree International',
-            'short_name': 'DoubleTree',
+            'name': name,
+            'short_name': 'Hilton',
             'parameters': {
                 'arrival': {
                     'name': 'arrivalDate',
@@ -29,12 +57,12 @@ class DoubletreeInternationalPlaza(HotelWebsite):
                 'found': True
             }],
             'pages': [{
-                'url': 'https://secure3.hilton.com/en_US/dt/reservation/book.htm',
+                'url': root_url,
                 'POST': {
-                    'ctyhocn': 'YYZIPDT'
+                    'ctyhocn': hotel
                 }
             }, {
-                'url': 'https://secure3.hilton.com/en_US/dt/reservation/book.htm',
+                'url': root_url,
                 'GET': {
                     'execution': 'e1s1'
                 },
@@ -44,7 +72,7 @@ class DoubletreeInternationalPlaza(HotelWebsite):
                     '_flexibleDates': 'on',
                     '_rewardBooking': 'on',
                     'numberOfRooms': '1',
-                    'numberOfAdults[0]': '4',
+                    'numberOfAdults[0]': '1',
                     'numberOfChildren[0]': '0',
                     'numberOfAdults[1]': '1',
                     'numberOfChildren[1]': '0',
@@ -55,7 +83,7 @@ class DoubletreeInternationalPlaza(HotelWebsite):
                     'promoCode': '',
                     'srpId': '',
                     'onlineValueRate': '',
-                    'groupCode': 'ANM',
+                    'groupCode': code,
                     'corporateId': '',
                     '_rememberCorporateId': 'on',
                     '_aaaRate': 'on',
@@ -68,4 +96,23 @@ class DoubletreeInternationalPlaza(HotelWebsite):
             }]
         }
 
-        super(DoubletreeInternationalPlaza, self).__init__(**default_args)
+        super(Hilton, self).__init__(**default_args)
+
+
+class DoubletreeInternationalPlaza(Hilton):
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(
+            name='DoubleTree International',
+            hotel_code='YYZIPDT',
+            group_code='ANM',
+            hotel_type='dt'
+        )
+
+class HiltonTorontoAirport(Hilton):
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(
+            name='DoubleTree International',
+            hotel_code='YYZHIHH',
+            group_code='ANIM13',
+            hotel_type='hi'
+        )
