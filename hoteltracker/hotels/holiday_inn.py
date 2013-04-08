@@ -77,6 +77,7 @@ class HolidayInnAirportEast(HolidayInn):
         super(HolidayInnAirportEast, self).__init__(
             name='Holiday Inn Airport - East',
             hotel_code='toronto/yyzae')
+            # Need group code...
 
 class HolidayInnTorontoInternational(HolidayInn):
     def __init__(self):
