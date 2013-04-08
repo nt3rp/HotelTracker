@@ -4,7 +4,7 @@ import sys
 import time
 from urllib2 import URLError
 from twitter import TwitterError
-from hoteltracker.hotels import DoubletreeInternationalPlaza, HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational, HiltonTorontoAirport
+from hoteltracker.hotels import DoubletreeInternationalPlaza, HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational, HiltonTorontoAirport, HiltonGardenInnTorontoAirport
 from hoteltracker.utils import TwitterHotelMessager
 
 def main():
@@ -52,7 +52,8 @@ def main():
 
     hotels = [
         #DoubletreeInternationalPlaza(),
-        HiltonTorontoAirport(),
+#        HiltonTorontoAirport(),
+        HiltonGardenInnTorontoAirport(),
         #HolidayInnAirportEast(),
         #HolidayInnTorontoInternational()
     ]
