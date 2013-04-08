@@ -126,3 +126,13 @@ class HiltonGardenInnTorontoAirport(Hilton):
             group_code='ANI',
             hotel_type='gi'
         )
+
+
+class HamptonInnSuites(Hilton):
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(
+            name='Hampton Inn and Suites',
+            hotel_code='YYZHSHX',
+            group_code='', # Need code!
+            hotel_type='hp'
+        )

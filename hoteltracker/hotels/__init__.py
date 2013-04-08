@@ -1,4 +1,4 @@
 #TODO: __all__ variable?
 from hilton import (DoubletreeInternationalPlaza,
-    HiltonTorontoAirport, HiltonGardenInnTorontoAirport)
+    HiltonTorontoAirport, HiltonGardenInnTorontoAirport, HamptonInnSuites)
 from holiday_inn import HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational
