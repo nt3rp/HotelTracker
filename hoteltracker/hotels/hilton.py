@@ -111,7 +111,7 @@ class DoubletreeInternationalPlaza(Hilton):
 class HiltonTorontoAirport(Hilton):
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(
-            name='DoubleTree International',
+            name='Hilton Toronto Airport',
             hotel_code='YYZHIHH',
             group_code='ANIM13',
             hotel_type='hi'
