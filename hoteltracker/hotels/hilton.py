@@ -133,6 +133,6 @@ class HamptonInnSuites(Hilton):
         super(self.__class__, self).__init__(
             name='Hampton Inn and Suites',
             hotel_code='YYZHSHX',
-            group_code='', # Need code!
+            group_code='V86',
             hotel_type='hp'
         )

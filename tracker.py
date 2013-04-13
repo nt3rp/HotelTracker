@@ -55,7 +55,7 @@ def main():
         HiltonTorontoAirport(),
         HiltonGardenInnTorontoAirport(),
         HamptonInnSuites(),
-        HolidayInnAirportEast(),
+        #HolidayInnAirportEast(),
         HolidayInnTorontoInternational(),
         SheratonTorontoAirport()
     ]
