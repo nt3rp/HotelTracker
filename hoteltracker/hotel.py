@@ -60,10 +60,16 @@ class HotelWebsite(object):
         for page in self._pages:
             self.logger.info('page: {0}'.format(page))
 
-            get = self._convert_params(page.get('GET'), kwargs)
+            get = page.get('GET')
+            if get:
+                get = self._convert_params(get, kwargs)
+
             self.logger.debug('GET: {0}'.format(get))
 
-            post = self._convert_params(page.get('POST'), kwargs)
+            post = page.get('POST')
+            if post:
+                post = self._convert_params(post, kwargs)
+
             self.logger.debug('POST: {0}'.format(post))
 
             response = self._visit(page, get, post)
@@ -113,7 +119,7 @@ class HotelWebsite(object):
             found = condition.get('found')
 
             if selector == "_text":
-                result = soup.find(True, text=pattern)
+                result = soup.find(text=pattern)
             else:
                 result = soup.findSelect(selector)
 
