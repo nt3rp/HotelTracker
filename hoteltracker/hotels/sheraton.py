@@ -16,13 +16,14 @@ class SheratonTorontoAirport(HotelWebsite):
                 }
             },
             'formats': {
-                'date': '%d %b %Y'
+                'date': '%Y-%m-%d'
             },
             'conditions': [{
                 'selector': '_text',
-                'pattern': '.*Room unavailable on one or all of your selected dates..*',
+                'pattern': '.*Room unavailable on one or all of your selected dates.*',
                 'found': False
             }, {
+                # What is the success condition?
                 'selector': 'title',
                 'pattern': '.*Available Rooms.*',
                 'found': True

@@ -119,7 +119,7 @@ class HotelWebsite(object):
             found = condition.get('found')
 
             if selector == "_text":
-                result = soup.find(True, text=pattern)
+                result = soup.find(text=pattern)
             else:
                 result = soup.findSelect(selector)
 
