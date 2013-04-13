@@ -1,5 +1,10 @@
 from hoteltracker import HotelWebsite
 
+# Sheraton Toronto Airport hotel website is seriously different from other
+# Sheraton websites / Starwood Meeting Properties...
+
+# If you need an example site, jsut google the base URL:
+#    https://www.starwoodmeeting.com/StarGroupsWeb/
 class SheratonTorontoAirport(HotelWebsite):
     def __init__(self, *args, **kwargs):
         default_args = {
@@ -23,9 +28,9 @@ class SheratonTorontoAirport(HotelWebsite):
                 'pattern': '.*Room unavailable on one or all of your selected dates.*',
                 'found': False
             }, {
-                # What is the success condition?
-                'selector': 'title',
-                'pattern': '.*Available Rooms.*',
+                # Not 100% if this works.
+                'selector': '#resultstable',
+                'pattern': '.*Available Rooms.*', # Unused
                 'found': True
             }],
             'pages': [{
