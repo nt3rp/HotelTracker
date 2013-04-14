@@ -51,13 +51,13 @@ def main():
 
 
     hotels = [
-#        DoubletreeInternationalPlaza(),
-#        HiltonTorontoAirport(),
-#        HiltonGardenInnTorontoAirport(),
-#        HamptonInnSuites(),
-#        #HolidayInnAirportEast(),
-#        HolidayInnTorontoInternational(),
-#        SheratonTorontoAirport(),
+        DoubletreeInternationalPlaza(),
+        HiltonTorontoAirport(),
+        HiltonGardenInnTorontoAirport(),
+        HamptonInnSuites(),
+        #HolidayInnAirportEast(),
+        HolidayInnTorontoInternational(),
+        SheratonTorontoAirport(),
         Radisson()
     ]
 
