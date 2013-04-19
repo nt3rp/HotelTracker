@@ -51,16 +51,16 @@ def main():
 
 
     hotels = [
-#        DoubletreeInternationalPlaza(),
-#        HiltonTorontoAirport(),
-#        HiltonGardenInnTorontoAirport(),
-#        HamptonInnSuites(),
-#        #HolidayInnAirportEast(),
-#        HolidayInnTorontoInternational(),
-#        SheratonTorontoAirport(),
-#        Radisson(),
-#        #Marriott()
-        CrownePlaza()
+        DoubletreeInternationalPlaza(),
+        HiltonTorontoAirport(),
+        HiltonGardenInnTorontoAirport(),
+        HamptonInnSuites(),
+        #HolidayInnAirportEast(),
+        HolidayInnTorontoInternational(),
+        SheratonTorontoAirport(),
+        Radisson(),
+        #Marriott(),
+        #CrownePlaza()
     ]
 
     frequency = args.get('frequency')
