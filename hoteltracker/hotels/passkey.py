@@ -1,7 +1,5 @@
 from hoteltracker import HotelWebsite
 
-# https://resweb.passkey.com/Resweb.do?mode=welcome_gi_new&groupID=15543280
-
 class Passkey(HotelWebsite):
     def __init__(self, *args, **kwargs):
         if kwargs.get('hotel_code'):
@@ -20,6 +18,13 @@ class Passkey(HotelWebsite):
         if kwargs.get('mode'):
             # Use the actual hotel code
             mode = kwargs.get('mode')
+        else:
+            # TODO: ERROR!
+            pass
+
+        if kwargs.get('reservation_type'):
+            # Use the actual hotel code
+            res_type = kwargs.get('reservation_type')
         else:
             # TODO: ERROR!
             pass
@@ -53,11 +58,10 @@ class Passkey(HotelWebsite):
                 'url': 'https://resweb.passkey.com/Resweb.do',
                 'GET': {
                     'mode': mode,
-                    'eventID': hotel
+                    res_type: hotel
                 }
             }, {
-                'url': 'https://resweb.passkey'
-                       '.com/ux/LodgingselectPageAction_ux.do',
+                'url': 'https://resweb.passkey.com/ux/LodgingselectPageAction_ux.do',
                 'POST': {
                     'pageFrom': 'LodgingDetail',
                     'hdnlocale': 'en',
@@ -83,7 +87,8 @@ class Marriott(Passkey):
         super(self.__class__, self).__init__(
             name='Marriott Toronto Airport',
             hotel_code='10350521',
-            mode='welcome_ei_new'
+            mode='welcome_ei_new',
+            reservation_type='eventID'
         )
 
 class CrownePlaza(Passkey):
@@ -91,5 +96,6 @@ class CrownePlaza(Passkey):
         super(self.__class__, self).__init__(
             name='Crowne Plaza Toronto Airport',
             hotel_code='15543280',
-            mode='welcome_gi_new'
+            mode='welcome_gi_new',
+            reservation_type='groupID'
         )
