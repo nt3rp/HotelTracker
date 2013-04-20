@@ -4,4 +4,4 @@ from hilton import (DoubletreeInternationalPlaza,
 from holiday_inn import HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational
 from sheraton import SheratonTorontoAirport
 from radisson import Radisson
-from marriott import Marriott
+from passkey import Marriott, CrownePlaza
