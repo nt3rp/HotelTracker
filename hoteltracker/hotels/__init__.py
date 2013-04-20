@@ -5,3 +5,4 @@ from holiday_inn import HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInte
 from sheraton import SheratonTorontoAirport
 from radisson import Radisson
 from passkey import Marriott, CrownePlaza
+from marriott import ResidenceInn
