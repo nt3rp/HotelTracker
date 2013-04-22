@@ -38,23 +38,14 @@ class Marriott(HotelWebsite):
             },
             'conditions': [{
                 'selector': '_text',
-                'pattern': '.*There are no rooms available for your requested travel criteria.*',
+                'pattern': '.*Group Rate Not Available for Requested Dates.*',
                 'found': False
             }, {
-                'selector': '.ratesListing .roomEntry',
+                'selector': '#roomRatesSelectionForm',
                 'pattern': '.*',
                 'found': True
             }],
-            'pages': [#{
-#                'url': website,
-#                'GET': {
-#                    'toDate': '05/26/13',
-#                    'groupCode': group_code,
-#                    'fromDate': '05/24/13',
-#                    'app': 'resvlink'
-#                }
-#            }, {
-            {
+            'pages': [{
                 'url': 'http://www.marriott.com/reservation/availabilitySearch.mi',
                 'GET': {
                     'propertyCode': hotel
@@ -104,4 +95,12 @@ class ResidenceInn(Marriott):
             hotel_code='yyzri',
             group_code='annanna',
             name='Residence Inn'
+        )
+
+class CourtyardTorontoAirport(Marriott):
+    def __init__(self):
+        super(CourtyardTorontoAirport, self).__init__(
+            hotel_code='yyzap',
+            group_code='aniania',
+            name='Courtyard Toronto Airport'
         )
