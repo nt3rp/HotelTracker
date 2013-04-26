@@ -51,20 +51,26 @@ def main():
 
 
     hotels = [
-        DoubletreeInternationalPlaza(),
-        HiltonTorontoAirport(),
-        HiltonGardenInnTorontoAirport(),
-        HamptonInnSuites(),
-        #HolidayInnAirportEast(),
-        HolidayInnTorontoInternational(),
-        SheratonTorontoAirport(),
-        Radisson(),
+        # BestWesternPlusTorontoAirport,
         CourtyardTorontoAirport(),
-        #Marriott(),
-        #CrownePlaza(),
-        #ResidenceInn()
-        #Sandman - No URL
-
+        ## CrownePlaza(),
+        DoubletreeInternationalPlaza(),
+        # FairfieldInnAndSuites,
+        HamptonInnSuites(),
+        HiltonGardenInnTorontoAirport(),
+        HiltonTorontoAirport(),
+        ## HolidayInnAirportEast(),
+        HolidayInnTorontoInternational(),
+        ## Hotel Carlingview Toronto Airport - No URL,
+        # HotelIndigoTorontoAirport
+        ## Marriott(),
+        # QualityInnAndSuitesTorontoAirport,
+        # QualitySuitesTorontoAirport
+        Radisson(),
+        ## ResidenceInn()
+        ## Sandman - No URL
+        SheratonTorontoAirport(),
+        # WestinBristolPlace,
     ]
 
     frequency = args.get('frequency')
