@@ -4,7 +4,8 @@ import sys
 import time
 from urllib2 import URLError
 from twitter import TwitterError
-from hoteltracker.hotels import DoubletreeInternationalPlaza, HolidayInn, HolidayInnAirportEast, HolidayInnTorontoInternational, HiltonTorontoAirport, HiltonGardenInnTorontoAirport, HamptonInnSuites, SheratonTorontoAirport, Radisson, Marriott, CrownePlaza, ResidenceInn, CourtyardTorontoAirport
+from hoteltracker.hotels import DoubletreeInternationalPlaza, HolidayInnAirportEast, HolidayInnTorontoInternational, HiltonTorontoAirport, HiltonGardenInnTorontoAirport, HamptonInnSuites, SheratonTorontoAirport, Radisson, Marriott, CrownePlaza, ResidenceInn, CourtyardTorontoAirport
+from hoteltracker.hotels.holiday_inn import HotelIndigoTorontoAirport
 from hoteltracker.utils import TwitterHotelMessager
 
 def main():
@@ -62,7 +63,7 @@ def main():
         ## HolidayInnAirportEast(),
         HolidayInnTorontoInternational(),
         ## Hotel Carlingview Toronto Airport - No URL,
-        # HotelIndigoTorontoAirport
+        HotelIndigoTorontoAirport()
         ## Marriott(),
         # QualityInnAndSuitesTorontoAirport,
         # QualitySuitesTorontoAirport

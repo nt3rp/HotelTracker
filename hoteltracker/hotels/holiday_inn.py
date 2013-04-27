@@ -1,10 +1,18 @@
 from hoteltracker import HotelWebsite
 
+# TODO: Refactor this shit
 class HolidayInn(HotelWebsite):
     def __init__(self, *args, **kwargs):
 
         website = 'http://www.ihg.com'
-        base_path = '/holidayinn/hotels/us/en/'
+        base_path = 'hotels/us/en/'
+
+        if kwargs.get('hotel_type'):
+            # Use the actual hotel code
+            hotel_type = kwargs.get('hotel_type')
+        else:
+            # TODO: ERROR!
+            pass
 
         if kwargs.get('hotel_code'):
             # Use the actual hotel code
@@ -24,10 +32,13 @@ class HolidayInn(HotelWebsite):
         else:
             group_code = ''
 
+        base_path = '/{0}/{1}'.format(hotel_type, base_path)
+
         # For whatever reason, we need to visit the same page twice; I think
         # the first time is to just set a cookie...
         page = {
-            'url': '{0}{1}{2}/bookthishotel'.format(website, base_path, hotel),
+            'url': '{0}{1}{2}/bookthishotel'.format(website, base_path,
+                hotel),
             'POST': {
                 "parentController": "{0}{1}/hoteldetail".format(base_path, hotel),
                 "includedView": "bookthishotel",
@@ -76,7 +87,8 @@ class HolidayInnAirportEast(HolidayInn):
     def __init__(self):
         super(HolidayInnAirportEast, self).__init__(
             name='Holiday Inn Airport - East',
-            hotel_code='toronto/yyzae')
+            hotel_code='toronto/yyzae',
+            hotel_type='holidayinn')
             # Need group code...
 
 class HolidayInnTorontoInternational(HolidayInn):
@@ -84,4 +96,13 @@ class HolidayInnTorontoInternational(HolidayInn):
         super(HolidayInnTorontoInternational, self).__init__(
             name='Holiday Inn Toronto International',
             hotel_code='toronto/yyzia',
-            group_code='AEN')
+            group_code='AEN',
+            hotel_type='holidayinn')
+
+class HotelIndigoTorontoAirport(HolidayInn):
+    def __init__(self):
+        super(HotelIndigoTorontoAirport, self).__init__(
+            name='Hotel Indigo Toronto Airport',
+            hotel_code='toronto/yyzin',
+            group_code='ANN',
+            hotel_type='hotelindigo')
