@@ -63,7 +63,7 @@ def main():
         ## HolidayInnAirportEast(),
         HolidayInnTorontoInternational(),
         ## Hotel Carlingview Toronto Airport - No URL,
-        HotelIndigoTorontoAirport()
+        HotelIndigoTorontoAirport(),
         ## Marriott(),
         # QualityInnAndSuitesTorontoAirport,
         # QualitySuitesTorontoAirport
