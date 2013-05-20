@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from collections import deque
 from datetime import datetime
+from email.mime.text import MIMEText
 import json
 import logging
 import random
+from smtplib import SMTP
 import twitter
 
 def list_missing_args(required=(), provided=(), message=None):
@@ -14,6 +16,29 @@ def list_missing_args(required=(), provided=(), message=None):
 
     return message.format(args=', '.join(difference),
         s='s'[len(difference)==1:])
+
+def send_email(to, body, subject=None, **kwargs):
+    gmail_username = '' or kwargs.get('user', '')
+    gmail_appspecificpassword = '' or kwargs.get('password', '')
+
+    if not subject:
+        subject = 'No Subject'
+
+    if not isinstance(to, list):
+        to = [to]
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = gmail_username
+    msg['To'] = ', '.join(to)
+
+    # Quick and dirty hack
+    s = SMTP('smtp.gmail.com', 587)
+    s.ehlo()
+    s.starttls()
+    s.login(gmail_username,gmail_appspecificpassword)
+    s.sendmail(gmail_username, to, msg.as_string())
+    s.quit()
 
 class TwitterHotelMessager(object):
     POST_ATTEMPTS = 3

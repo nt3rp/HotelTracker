@@ -11,7 +11,7 @@ from hoteltracker.hotels.holiday_inn import HolidayInnTorontoInternational, \
 from hoteltracker.hotels.marriott import CourtyardTorontoAirport
 from hoteltracker.hotels.radisson import Radisson
 from hoteltracker.hotels.sheraton import SheratonTorontoAirport
-from hoteltracker.utils import TwitterHotelMessager
+from hoteltracker.utils import TwitterHotelMessager, send_email
 
 def main():
     logger = logging.getLogger('hotel_tracker')
@@ -87,7 +87,15 @@ def main():
                 logger.info('{0}: Available? {1}'.format(hotel._name, available))
 
                 for handler in handlers:
-                    handler.update(hotel._name, available)
+                    # Feels bad man
+                    if isinstance(hotel, DoubletreeInternationalPlaza):
+                        users = ['']
+                        msg = 'There is at least one room available at the ' \
+                              'Doubletree! Do something about it ' \
+                              'quickly!\n--Nick'
+                        send_email(users, msg, 'Doubletree Available!')
+                    else:
+                        handler.update(hotel._name, available)
 
             if frequency == 0:
                 break
