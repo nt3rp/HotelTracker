@@ -6,28 +6,24 @@ class Passkey(HotelWebsite):
             # Use the actual hotel code
             hotel = kwargs.get('hotel_code')
         else:
-            # TODO: ERROR!
-            pass
+            raise Exception('No hotel_code provided')
 
         if kwargs.get('name'):
             name = kwargs.get('name')
         else:
-            # TODO: ERROR?
-            pass
+            raise Exception('No name provided')
 
         if kwargs.get('mode'):
             # Use the actual hotel code
             mode = kwargs.get('mode')
         else:
-            # TODO: ERROR!
-            pass
+            raise Exception('No mode provided')
 
         if kwargs.get('reservation_type'):
             # Use the actual hotel code
             res_type = kwargs.get('reservation_type')
         else:
-            # TODO: ERROR!
-            pass
+            raise Exception('No reservation_type provided')
 
         default_args = {
             'name': name,
