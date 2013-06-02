@@ -155,8 +155,11 @@ class HotelWebsite(object):
 
         return cls(**json_obj)
 
-# TODO: Create a 'page' interface / class
+
+# TODO: Create a 'page' interface / class?
 # ... could just be a named tuple
+
+# TODO: default to 'tonight' for checkin?
 
 class HotelScraper(object):
     """A low-level scraper intended for checking hotel availability."""

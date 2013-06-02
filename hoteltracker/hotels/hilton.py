@@ -1,9 +1,7 @@
-from hoteltracker import HotelWebsite
 from hoteltracker.hotel import HotelScraper
 
 class HiltonScraper(HotelScraper):
     def __init__(self, *args, **kwargs):
-
         self.name = kwargs.get('name', 'Unknown Hilton Hotel')
         self.short_name = kwargs.get('short_name', '? Hilton')
         self.hotel_type = kwargs.get('hotel_type', 'hi')
@@ -97,7 +95,8 @@ class HiltonTorontoAirport(HiltonScraper):
             name='Hilton Toronto Airport',
             location_code='YYZHIHH',
 #            group_code='ANIM13',
-            hotel_type='hi'
+            hotel_type='hi',
+            **kwargs
         )
 
 
@@ -107,7 +106,8 @@ class HiltonGardenInnTorontoAirport(HiltonScraper):
             name='Hilton Garden Inn Toronto Airport',
             location_code='YYZTAGI',
 #            group_code='ANI',
-            hotel_type='gi'
+            hotel_type='gi',
+            **kwargs
         )
 
 
@@ -117,5 +117,6 @@ class HamptonInnSuites(HiltonScraper):
             name='Hampton Inn and Suites',
             location_code='YYZHSHX',
 #            group_code='V86',
-            hotel_type='hp'
+            hotel_type='hp',
+            **kwargs
         )

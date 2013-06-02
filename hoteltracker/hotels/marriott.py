@@ -1,106 +1,97 @@
 from hoteltracker import HotelWebsite
+from hoteltracker.hotel import HotelScraper
 
-class Marriott(HotelWebsite):
+class MarriottScraper(HotelScraper):
     def __init__(self, *args, **kwargs):
-        if kwargs.get('hotel_code'):
-            # Use the actual hotel code
-            hotel = kwargs.get('hotel_code')
-        else:
-            # TODO: ERROR!
-            pass
+        self.name = kwargs.get('name', 'Unknown Marriott Hotel')
+        self.short_name = kwargs.get('short_name', '? Marriott')
+        self.location_code = kwargs.get('location_code')
+        self.group_code = kwargs.get('group_code', '')
 
-        if kwargs.get('name'):
-            name = kwargs.get('name')
-        else:
-            # TODO: ERROR?
-            pass
-
-        if kwargs.get('group_code'):
-            group_code = kwargs.get('group_code')
-        else:
-            group_code = ''
-
-        default_args = {
-            'name': name,
-            'short_name': 'Marriott',
-            'parameters': {
-                'arrival': {
-                    'name': 'fromDate',
-                    'type': 'date'
-                },
-                'departure': {
-                    'name': 'toDate',
-                    'type': 'date'
-                }
+        self.parameters = {
+            'arrival': {
+                'name': 'fromDate',
+                'type': 'date'
             },
-            'formats': {
-                'date': '%m/%d/%Y'
-            },
-            'conditions': [{
-                'selector': '_text',
-                'pattern': '.*Group Rate Not Available for Requested Dates.*',
-                'found': False
-            }, {
-                'selector': '#roomRatesSelectionForm',
-                'pattern': '.*',
-                'found': True
-            }],
-            'pages': [{
-                'url': 'http://www.marriott.com/reservation/availabilitySearch.mi',
-                'GET': {
-                    'propertyCode': hotel
-                },
-            }, {
-                'url': 'http://www.marriott.com/reservation/availabilitySearch.mi',
-                'GET': {
-                    'isSearch': 'false'
-                },
-                'POST': {
-                    'accountId': '',
-					'flexibleDateSearch': 'false',
-					'flexibleDates': 'false',
-					'fromDate': '05/24/13',
-					'minDate': '04/19/2013',
-					'maxDate': '04/06/2014',
-					'monthNames': 'January,February,March,April,May,June,July,August,September,October,November,December',
-					'weekDays': 'S,M,T,W,T,F,S',
-					'dateFormatPattern': 'MM/dd/yy',
-					'lengthOfStay': '2',
-					'toDate': '05/26/13',
-					'populateTodateFromFromDate': 'true',
-					'defaultToDateDays': '1',
-					'numberOfNights': '1',
-					'numberOfRooms': '1',
-					'numberOfGuests': '1',
-					'marriottRewardsNumber': '',
-					'useRewardsPoints': 'false',
-					'corporateCode': '',
-					'displayableIncentiveType_Number': '',
-					'clusterCode': 'group',
-					'groupCode': group_code,
-					'btn-submit': '',
-					'sSubmit': 'Search',
-					'miniStoreAvailabilitySearch': 'false',
-					'section': 'availability',
-                    'sSubmit': 'Search'
-                }
-            }]
+            'departure': {
+                'name': 'toDate',
+                'type': 'date'
+            }
         }
 
-        super(Marriott, self).__init__(*args, **default_args)
+        self.formats = {
+            'date': '%m/%d/%Y'
+        }
 
-class ResidenceInn(Marriott):
-    def __init__(self):
+        self.rules = [{
+            'selector': '_text',
+            'pattern': '.*Group Rate Not Available for Requested Dates.*',
+            'found': False
+        }, {
+            'selector': '#roomRatesSelectionForm',
+            'pattern': '.*',
+            'found': True
+        }]
+
+        # TODO: Which parameters are actually required?
+        self.pages = [{
+            'url': 'http://www.marriott.com/reservation/availabilitySearch.mi',
+            'GET': {
+                'propertyCode': self.hotel_code
+            },
+        }, {
+            'url': 'http://www.marriott.com/reservation/availabilitySearch.mi',
+            'GET': {
+                'isSearch': 'false'
+            },
+            'POST': {
+                'accountId': '',
+                'flexibleDateSearch': 'false',
+                'flexibleDates': 'false',
+                'fromDate': '05/24/13',
+                'minDate': '04/19/2013',
+                'maxDate': '04/06/2014',
+                'monthNames': 'January,February,March,April,May,June,July,August,September,October,November,December',
+                'weekDays': 'S,M,T,W,T,F,S',
+                'dateFormatPattern': 'MM/dd/yy',
+                'lengthOfStay': '2',
+                'toDate': '05/26/13',
+                'populateTodateFromFromDate': 'true',
+                'defaultToDateDays': '1',
+                'numberOfNights': '1',
+                'numberOfRooms': '1',
+                'numberOfGuests': '1',
+                'marriottRewardsNumber': '',
+                'useRewardsPoints': 'false',
+                'corporateCode': '',
+                'displayableIncentiveType_Number': '',
+                'clusterCode': 'group',
+                'groupCode': self.group_code,
+                'btn-submit': '',
+                'sSubmit': 'Search',
+                'miniStoreAvailabilitySearch': 'false',
+                'section': 'availability',
+                'sSubmit': 'Search'
+            }
+        }]
+
+        super(MarriottScraper, self).__init__(*args, **kwargs)
+
+
+class ResidenceInn(MarriottScraper):
+    def __init__(self, *args, **kwargs):
         super(ResidenceInn, self).__init__(
-            hotel_code='yyzri',
-            group_code='annanna',
-            name='Residence Inn'
+            location_code='yyzri',
+#            group_code='annanna',
+            name='Residence Inn',
+            **kwargs
         )
 
-class CourtyardTorontoAirport(Marriott):
-    def __init__(self):
+class CourtyardTorontoAirport(MarriottScraper):
+    def __init__(self, *args, **kwargs):
         super(CourtyardTorontoAirport, self).__init__(
-            hotel_code='yyzap',
-            group_code='aniania',
-            name='Courtyard Toronto Airport'
+            location_code='yyzap',
+#            group_code='aniania',
+            name='Courtyard Toronto Airport',
+            **kwargs
         )

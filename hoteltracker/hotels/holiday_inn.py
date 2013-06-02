@@ -1,108 +1,95 @@
 from hoteltracker import HotelWebsite
+from hoteltracker.hotel import HotelScraper
 
-# TODO: Refactor this shit
-class HolidayInn(HotelWebsite):
+class IHGGroupScraper(HotelScraper):
     def __init__(self, *args, **kwargs):
+        self.name = kwargs.get('name', 'Unknown IHG Group Hotel')
+        self.short_name = kwargs.get('short_name', '? IHG Group')
+        self.hotel_type = kwargs.get('hotel_type', 'holidayinn')
+        self.location_code = kwargs.get('location_code')
+        self.group_code = kwargs.get('group_code', '')
 
         website = 'http://www.ihg.com'
         base_path = 'hotels/us/en/'
 
-        if kwargs.get('hotel_type'):
-            # Use the actual hotel code
-            hotel_type = kwargs.get('hotel_type')
-        else:
-            # TODO: ERROR!
-            pass
+        self.parameters = {
+            'arrival': {
+                'name': 'checkInDate',
+                'type': 'date'
+            },
+            'departure': {
+                'name': 'checkOutDate',
+                'type': 'date'
+            }
+        }
 
-        if kwargs.get('hotel_code'):
-            # Use the actual hotel code
-            hotel = kwargs.get('hotel_code')
-        else:
-            # TODO: ERROR!
-            pass
+        self.formats = {
+            'date': '%b-%d-%Y'
+        }
 
-        if kwargs.get('name'):
-            name = kwargs.get('name')
-        else:
-            # TODO: ERROR?
-            pass
-
-        if kwargs.get('group_code'):
-            group_code = kwargs.get('group_code')
-        else:
-            group_code = ''
-
-        base_path = '/{0}/{1}'.format(hotel_type, base_path)
+        self.rules = [{
+            'selector': '_text',
+            'pattern': '.*There are no rooms available for your requested travel criteria.*',
+            'found': False
+        }, {
+            'selector': '.ratesListing .roomEntry',
+            'pattern': '.*',
+            'found': True
+        }]
 
         # For whatever reason, we need to visit the same page twice; I think
         # the first time is to just set a cookie...
         page = {
-            'url': '{0}{1}{2}/bookthishotel'.format(website, base_path,
-                hotel),
+            'url': '{0}{1}{2}/bookthishotel'.format(
+                website, base_path, self.location_code
+            ),
             'POST': {
-                "parentController": "{0}{1}/hoteldetail".format(base_path, hotel),
+                "parentController": "{0}{1}/hoteldetail".format(
+                    base_path, self.location_code
+                ),
                 "includedView": "bookthishotel",
                 "checkInDate": "Apr-01-2013",
                 "checkOutDate": "Apr-02-2013",
                 "adultsCount": "1",
                 "childrenCount": "0",
                 "roomsCount": "1",
-                "groupCode": group_code,
+                "groupCode": self.group_code,
                 "corporateId": "",
                 "ratePreference": "6CBARC"
             }
         }
 
-        default_args = {
-            'name': name,
-            'short_name': 'HolidayInn',
-            'parameters': {
-                'arrival': {
-                    'name': 'checkInDate',
-                    'type': 'date'
-                },
-                'departure': {
-                    'name': 'checkOutDate',
-                    'type': 'date'
-                }
-            },
-            'formats': {
-                'date': '%b-%d-%Y'
-            },
-            'conditions': [{
-                'selector': '_text',
-                'pattern': '.*There are no rooms available for your requested travel criteria.*',
-                'found': False
-            }, {
-                'selector': '.ratesListing .roomEntry',
-                'pattern': '.*',
-                'found': True
-            }],
-            'pages': [page, page]
-        }
+        self.pages = [page, page]
 
-        super(HolidayInn, self).__init__(*args, **default_args)
+        super(IHGGroupScraper, self).__init__(*args, **kwargs)
 
-class HolidayInnAirportEast(HolidayInn):
-    def __init__(self):
+
+class HolidayInnAirportEast(IHGGroupScraper):
+    def __init__(self, *args, **kwargs):
         super(HolidayInnAirportEast, self).__init__(
             name='Holiday Inn Airport - East',
-            hotel_code='toronto/yyzae',
-            hotel_type='holidayinn')
-            # Need group code...
+            location_code='toronto/yyzae',
+#            group_code='missing group code',
+            hotel_type='holidayinn',
+            **kwargs
+        )
 
-class HolidayInnTorontoInternational(HolidayInn):
-    def __init__(self):
+class HolidayInnTorontoInternational(IHGGroupScraper):
+    def __init__(self, *args, **kwargs):
         super(HolidayInnTorontoInternational, self).__init__(
             name='Holiday Inn Toronto International',
-            hotel_code='toronto/yyzia',
-            group_code='AEN',
-            hotel_type='holidayinn')
+            location_code='toronto/yyzia',
+#            group_code='AEN',
+            hotel_type='holidayinn',
+            **kwargs
+        )
 
-class HotelIndigoTorontoAirport(HolidayInn):
-    def __init__(self):
+class HotelIndigoTorontoAirport(IHGGroupScraper):
+    def __init__(self, *args, **kwargs):
         super(HotelIndigoTorontoAirport, self).__init__(
             name='Hotel Indigo Toronto Airport',
-            hotel_code='toronto/yyzin',
-            group_code='ANN',
-            hotel_type='hotelindigo')
+            location_code='toronto/yyzin',
+#            group_code='ANN',
+            hotel_type='hotelindigo',
+            **kwargs
+        )
