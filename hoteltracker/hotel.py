@@ -195,12 +195,12 @@ class HotelScraper(object):
 
             post = page.get('POST')
             if post:
-                get = self.normalize_params(post, criteria)
+                post = self.normalize_params(post, criteria)
 
             url = page.get('url')
             html = self.visit(url, get, post)
 
-        is_available = self.analyze_response()
+        is_available = self.analyze_response(html)
         self.cookie_jar.clear()
         return is_available
 
