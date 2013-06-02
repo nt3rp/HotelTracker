@@ -225,13 +225,15 @@ class HotelScraper(object):
         success = True
         for rule in self.rules:
 
-            selector = rule.get('selector')
-            pattern = rule.get('pattern')
+            # TODO: Do not compile this pattern every time
+            pattern = re.compile(rule.get('pattern'))
             found = rule.get('found')
+            selector = rule.get('selector')
 
             if selector == "_text":
                 result = soup.find(text=pattern)
             else:
+                #TODO: Actually use the pattern in this case
                 result = soup.findSelect(selector)
 
             if found != bool(result):
@@ -245,15 +247,15 @@ class HotelScraper(object):
         if not source_params:
             return criteria
 
-        # Look through all the get / post variables
-        for var, val in source_params.iteritems():
+        # Look through all the criteria
+        for var, val in criteria.iteritems():
             param = self.parameters.get(var)
 
-            # If the variable is on our list to convert...
+            # If the criteria is on our list to convert...
             if param and param['name'] in source_params.keys():
 
                 # ... then convert to a normalized form
-                field = self.format_paramater(param.get('type'), val)
+                field = self.format_parameter(param.get('type'), val)
                 source_params[param['name']] = field
 
         return source_params
