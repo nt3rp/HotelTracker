@@ -9,7 +9,7 @@ from hoteltracker.hotels.hilton import DoubletreeInternationalPlaza, \
 from hoteltracker.hotels.holiday_inn import HolidayInnTorontoInternational, \
     HotelIndigoTorontoAirport
 from hoteltracker.hotels.marriott import CourtyardTorontoAirport
-from hoteltracker.hotels.radisson import Radisson
+from hoteltracker.hotels.radisson import Radisson, RadissonTorontoAirport
 from hoteltracker.hotels.sheraton import SheratonTorontoAirport
 from hoteltracker.utils import TwitterHotelMessager
 
@@ -38,8 +38,30 @@ def main():
     args, unknown = parser.parse_known_args()
     args = vars(args)
 
+    # TODO: Have group code be a param at 'is_available' time rather than
+    # at initialization time
+
     hotels = [
-        DoubletreeInternationalPlaza(group_code='ANM')
+        # BestWesternPlusTorontoAirport,
+        CourtyardTorontoAirport(group_code='aniania'),
+        ## CrownePlaza(),
+        DoubletreeInternationalPlaza(group_code='ANM'),
+        # FairfieldInnAndSuites,
+        HamptonInnSuites(group_code='V86'),
+        HiltonGardenInnTorontoAirport(group_code='ANI'),
+        HiltonTorontoAirport(group_code='ANIM13'),
+        ## HolidayInnAirportEast(),
+        HolidayInnTorontoInternational(group_code='AEN'),
+        ## Hotel Carlingview Toronto Airport - No URL,
+        HotelIndigoTorontoAirport(group_code='ANN'),
+        ## Marriott(),
+        # QualityInnAndSuitesTorontoAirport,
+        # QualitySuitesTorontoAirport
+        RadissonTorontoAirport(group_code='ANIME'),
+        ## ResidenceInn()
+        ## Sandman - No URL
+        SheratonTorontoAirport(group_code='DEEDE'),
+        # WestinBristolPlace,
     ]
 
     frequency = args.get('frequency')
