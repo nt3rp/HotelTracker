@@ -1,138 +1,122 @@
-from hoteltracker import HotelWebsite
+from hoteltracker.hotel import HotelScraper
 
-
-class Hilton(HotelWebsite):
+class HiltonScraper(HotelScraper):
     def __init__(self, *args, **kwargs):
-        if kwargs.get('hotel_code'):
-            # Use the actual hotel code
-            hotel = kwargs.get('hotel_code')
-        else:
-            # TODO: ERROR!
-            pass
+        self.name = kwargs.get('name', 'Unknown Hilton Hotel')
+        self.short_name = kwargs.get('short_name', '? Hilton')
+        self.hotel_type = kwargs.get('hotel_type', 'hi')
+        self.location_code = kwargs.get('location_code')
+        self.group_code = kwargs.get('group_code', '')
 
-        if kwargs.get('name'):
-            name = kwargs.get('name')
-        else:
-            # TODO: ERROR?
-            pass
+        base_url = 'https://secure3.hilton.com/en_US/{0}/reservation/book.htm'
+        url = base_url.format(self.hotel_type)
 
-        if kwargs.get('hotel_type'):
-            type = kwargs.get('hotel_type')
-        else:
-            # TODO: ERROR!
-            pass
-
-        if kwargs.get('group_code') is not None:
-            code = kwargs.get('group_code')
-        else:
-            # TODO: ERROR?
-            pass
-
-        root_url = 'https://secure3.hilton.com/en_US/{0}/reservation/book' \
-                   '.htm'.format(type)
-
-        default_args = {
-            'name': name,
-            'short_name': 'Hilton',
-            'parameters': {
-                'arrival': {
-                    'name': 'arrivalDate',
-                    'type': 'date'
-                },
-                'departure': {
-                    'name': 'departureDate',
-                    'type': 'date'
-                }
+        self.parameters = {
+            'arrival': {
+                'name': 'arrivalDate',
+                'type': 'date'
             },
-            'formats': {
-                'date': '%d %b %Y'
-            },
-            'conditions': [{
-                'selector': '_text',
-                'pattern': '.*The requested rate is not available.*',
-                'found': False
-            }, {
-                'selector': 'title',
-                'pattern': '.*Available Rooms.*',
-                'found': True
-            }],
-            'pages': [{
-                'url': root_url,
-                'POST': {
-                    'ctyhocn': hotel
-                }
-            }, {
-                'url': root_url,
-                'GET': {
-                    'execution': 'e1s1'
-                },
-                'POST': {
-                    'arrivalDate': '25 May 2012',
-                    'departureDate': '27 May 2012',
-                    '_flexibleDates': 'on',
-                    '_rewardBooking': 'on',
-                    'numberOfRooms': '1',
-                    'numberOfAdults[0]': '1',
-                    'numberOfChildren[0]': '0',
-                    'numberOfAdults[1]': '1',
-                    'numberOfChildren[1]': '0',
-                    'numberOfAdults[2]': '1',
-                    'numberOfChildren[2]': '0',
-                    'numberOfAdults[3]': '1',
-                    'numberOfChildren[3]': '0',
-                    'promoCode': '',
-                    'srpId': '',
-                    'onlineValueRate': '',
-                    'groupCode': code,
-                    'corporateId': '',
-                    '_rememberCorporateId': 'on',
-                    '_aaaRate': 'on',
-                    '_aarpRate': 'on',
-                    '_governmentRate': 'on',
-                    '_travelAgentRate': 'on',
-                    '_eventId_findRoom': 'Continue',
-                    'execution': 'e5s2'
-                }
-            }]
+            'departure': {
+                'name': 'departureDate',
+                'type': 'date'
+            }
         }
 
-        super(Hilton, self).__init__(**default_args)
+        self.formats = {
+            'date': '%d %b %Y'
+        }
+
+        self.rules = [{
+            'selector': '_text',
+            'pattern': '.*The requested rate is not available.*',
+            'found': False
+        }, {
+            'selector': 'title',
+            'pattern': '.*Available Rooms.*',
+            'found': True
+        }]
+
+        # TODO: Which parameters are actually required?
+        self.pages = [{
+            'url': url,
+            'POST': {
+                'ctyhocn': self.location_code
+            }
+        }, {
+            'url': url,
+            'GET': {
+                'execution': 'e1s1'
+            },
+            'POST': {
+                'arrivalDate': '25 May 2012',
+                'departureDate': '27 May 2012',
+                '_flexibleDates': 'on',
+                '_rewardBooking': 'on',
+                'numberOfRooms': '1',
+                'numberOfAdults[0]': '1',
+                'numberOfChildren[0]': '0',
+                'numberOfAdults[1]': '1',
+                'numberOfChildren[1]': '0',
+                'numberOfAdults[2]': '1',
+                'numberOfChildren[2]': '0',
+                'numberOfAdults[3]': '1',
+                'numberOfChildren[3]': '0',
+                'promoCode': '',
+                'srpId': '',
+                'onlineValueRate': '',
+                'groupCode': self.group_code,
+                'corporateId': '',
+                '_rememberCorporateId': 'on',
+                '_aaaRate': 'on',
+                '_aarpRate': 'on',
+                '_governmentRate': 'on',
+                '_travelAgentRate': 'on',
+                '_eventId_findRoom': 'Continue',
+                'execution': 'e5s2'
+            }
+        }]
+
+        super(HiltonScraper, self).__init__(*args, **kwargs)
 
 
-class DoubletreeInternationalPlaza(Hilton):
+class DoubletreeInternationalPlaza(HiltonScraper):
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(
+        super(DoubletreeInternationalPlaza, self).__init__(
             name='DoubleTree International',
-            hotel_code='YYZIPDT',
-            group_code='ANM',
-            hotel_type='dt'
+            location_code='YYZIPDT',
+#            group_code='ANM',
+            hotel_type='dt',
+            **kwargs
         )
 
-class HiltonTorontoAirport(Hilton):
+class HiltonTorontoAirport(HiltonScraper):
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(
+        super(HiltonTorontoAirport, self).__init__(
             name='Hilton Toronto Airport',
-            hotel_code='YYZHIHH',
-            group_code='ANIM13',
-            hotel_type='hi'
+            location_code='YYZHIHH',
+#            group_code='ANIM13',
+            hotel_type='hi',
+            **kwargs
         )
 
 
-class HiltonGardenInnTorontoAirport(Hilton):
+class HiltonGardenInnTorontoAirport(HiltonScraper):
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(
+        super(HiltonGardenInnTorontoAirport, self).__init__(
             name='Hilton Garden Inn Toronto Airport',
-            hotel_code='YYZTAGI',
-            group_code='ANI',
-            hotel_type='gi'
+            location_code='YYZTAGI',
+#            group_code='ANI',
+            hotel_type='gi',
+            **kwargs
         )
 
 
-class HamptonInnSuites(Hilton):
+class HamptonInnSuites(HiltonScraper):
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(
+        super(HamptonInnSuites, self).__init__(
             name='Hampton Inn and Suites',
-            hotel_code='YYZHSHX',
-            group_code='V86',
-            hotel_type='hp'
+            location_code='YYZHSHX',
+#            group_code='V86',
+            hotel_type='hp',
+            **kwargs
         )
