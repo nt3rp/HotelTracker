@@ -14,17 +14,6 @@ from hoteltracker.hotels.sheraton import SheratonTorontoAirport
 from hoteltracker.utils import TwitterHotelMessager
 
 def main():
-    logger = logging.getLogger('hotel_tracker')
-    logger.setLevel(logging.INFO)
-
-    log_format = '[%(asctime)s] {%(module)s.py:%(funcName)s:%(lineno)d} ' \
-                 '%(levelname)s %(name)s - %(message)s'
-    formatter = logging.Formatter(log_format,'%Y-%m-%d %H:%M:%S')
-
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
-
     parser = argparse.ArgumentParser(description='Try to find out if there is vacancy at a hotel.');
     parser.add_argument(
         '--arrival',
@@ -44,39 +33,13 @@ def main():
         default=5,
         help='How often (in minutes) to check for hotel availability. Defaults to every 5 minutes.')
 
+    # TODO: add argument for list of hotels, config file
+
     args, unknown = parser.parse_known_args()
     args = vars(args)
 
-    handlers = []
-
-    if args.get('twitter_config'):
-        twitter_handler = TwitterHotelMessager(
-            config_path=args.get('twitter_config')
-        )
-        handlers.append(twitter_handler)
-
-
     hotels = [
-        # BestWesternPlusTorontoAirport,
-        CourtyardTorontoAirport(),
-        ## CrownePlaza(),
-        DoubletreeInternationalPlaza(),
-        # FairfieldInnAndSuites,
-        HamptonInnSuites(),
-        HiltonGardenInnTorontoAirport(),
-        HiltonTorontoAirport(),
-        ## HolidayInnAirportEast(),
-        HolidayInnTorontoInternational(),
-        ## Hotel Carlingview Toronto Airport - No URL,
-        HotelIndigoTorontoAirport(),
-        ## Marriott(),
-        # QualityInnAndSuitesTorontoAirport,
-        # QualitySuitesTorontoAirport
-        Radisson(),
-        ## ResidenceInn()
-        ## Sandman - No URL
-        SheratonTorontoAirport(),
-        # WestinBristolPlace,
+        DoubletreeInternationalPlaza(group_code='ANM')
     ]
 
     frequency = args.get('frequency')
@@ -84,10 +47,6 @@ def main():
         try:
             for hotel in hotels:
                 available = hotel.is_available(**args)
-                logger.info('{0}: Available? {1}'.format(hotel._name, available))
-
-                for handler in handlers:
-                    handler.update(hotel._name, available)
 
             if frequency == 0:
                 break
@@ -96,10 +55,10 @@ def main():
         except KeyboardInterrupt:
             print '\nKeyboardInterrupt received. Halting...'
             break
-        except (URLError, TwitterError), e:
-            logger.error(e)
-        except Exception, e2:
-            logger.error('Unexpected Error: {0}'.format(e2))
+        except (URLError, TwitterError), expected_error:
+            pass
+        except Exception, unexpected_error:
+            raise unexpected_error
 
 
 if __name__ == '__main__':

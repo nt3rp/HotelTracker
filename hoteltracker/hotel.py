@@ -159,15 +159,7 @@ class HotelWebsite(object):
 # ... could just be a named tuple
 
 class HotelScraper(object):
-    """
-    A specialized scraper intended for checking hotel availability.
-
-
-    """
-
-    # TODO: Use the strategy pattern?
-    # What would the strategy be? For how to open URLs? For how to interpret
-    # results?
+    """A low-level scraper intended for checking hotel availability."""
 
     def __init__(self, opener=None, cookie_jar=None, *args, **kwargs):
         for key, value in kwargs.iteritems():
@@ -186,8 +178,8 @@ class HotelScraper(object):
             )
 
     # TODO: Allow other criteria
-    def is_available(self, arrival, departure):
-        if not all(arrival, departure):
+    def is_available(self, arrival, departure, *args, **kwargs):
+        if not all([arrival, departure]):
             # TODO: ERROR
             pass
 
@@ -205,7 +197,7 @@ class HotelScraper(object):
             if post:
                 get = self.normalize_params(post, criteria)
 
-            url = page.get('URL')
+            url = page.get('url')
             html = self.visit(url, get, post)
 
         is_available = self.analyze_response()
@@ -222,7 +214,7 @@ class HotelScraper(object):
         if post:
             post = urllib.urlencode(post)
 
-        with contextlib.closing(self.__opener.open(url, post)) as opener:
+        with contextlib.closing(self.opener.open(url, post)) as opener:
             html = opener.read()
 
         return html
