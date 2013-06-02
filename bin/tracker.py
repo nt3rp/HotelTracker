@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 import argparse
-import logging
 import sys
 import time
 from urllib2 import URLError
@@ -9,9 +9,8 @@ from hoteltracker.hotels.hilton import DoubletreeInternationalPlaza, \
 from hoteltracker.hotels.holiday_inn import HolidayInnTorontoInternational, \
     HotelIndigoTorontoAirport
 from hoteltracker.hotels.marriott import CourtyardTorontoAirport
-from hoteltracker.hotels.radisson import Radisson, RadissonTorontoAirport
+from hoteltracker.hotels.radisson import RadissonTorontoAirport
 from hoteltracker.hotels.sheraton import SheratonTorontoAirport
-from hoteltracker.utils import TwitterHotelMessager
 
 def main():
     parser = argparse.ArgumentParser(description='Try to find out if there is vacancy at a hotel.');
