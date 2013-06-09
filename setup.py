@@ -7,7 +7,7 @@ setup(
     author_email='nterwoord@alumni.uwaterloo.ca',
     packages=['hoteltracker', 'hoteltracker.hotels', 'hoteltracker.test',],
     scripts=['bin/tracker.py'],
-    url='http://pypi.python.org/pypi/HotelTracker/',
+    url='http://pypi.python.org/pypi/HotelTracker/', #TODO: Change to github
     license='LICENSE.txt',
     description='Tools for checking hotel availability',
     long_description=open('README.txt').read(),
