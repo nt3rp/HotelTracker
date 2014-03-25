@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 
-class HoteltrackerItem(Item):
-    # define the fields for your item here like:
-    # name = Field()
-    pass
+class Hotel(Item):
+    name = Field()
+    available = Field()
+    last_updated = Field()
