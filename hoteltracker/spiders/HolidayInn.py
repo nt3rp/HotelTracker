@@ -12,7 +12,7 @@ class HolidayinnSpider(Spider):
 
     # TODO: How can we pass in / use settings to define the start url?
     start_urls = (
-        'http://www.holidayinn.com/hotels/us/en/toronto/yyzae/hoteldetail?qAdlt=1&qBrs=6c.hi.ex.rs.ic.cp.in.sb.cw.cv&qChld=0&qFRA=1&qGRM=0&qGrpCd=ANN&qIta=99801505&qPSt=0&qRRSrt=rt&qRms=1&qRpn=1&qRpp=10&qSHp=1&qSmP=3&qSrt=sBR&qWch=0&srb_u=1&icdv=99801505',
+        'http://www.holidayinn.com/hotels/us/en/toronto/yyzae/hoteldetail',
         )
 
     def parse(self, response):
@@ -42,7 +42,16 @@ class HolidayinnSpider(Spider):
     def after_post(self, response):
         sel = Selector(response)
 
-        open_in_browser(response)
+        search_form = sel.css('#hotelDetailsBean')
+
+        # TODO: Do we care what happens if we're back on the search page?
+        # TODO: Should return an item with availability `False` in this case
+        if search_form:
+            # No rooms: There are no rooms available that match your requested travel criteria. Please consider modifying your preferences or travel dates, or select another hotel nearby
+            # Bad code: The Group Code provided does not exist at this hotel. Please check the code and try again. Contact your nearest reservation office for assistance.
+            # Missing URL Params: We are sorry, your Group Code cannot be booked on our web site. Please contact the hotel directly call your nearest reservation office for assistance.
+
+            return []
 
         # TODO: How to extract just the first element?
         rooms = sel.css('.ratesListing .roomsView')
@@ -58,9 +67,10 @@ class HolidayinnSpider(Spider):
             pass
 
         name = hotel[0].extract()
+        hotel = '{hotel} - {location}'.format(hotel=self.name, location=name)
 
         item = Hotel()
-        item['name'] = name # TODO: Add Hotel name
+        item['name'] = hotel
         item['available'] = available
         item['last_updated'] = datetime.now()
 
