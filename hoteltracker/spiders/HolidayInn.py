@@ -1,3 +1,4 @@
+from time import strftime, strptime
 from datetime import datetime
 from scrapy.http import FormRequest
 from scrapy.selector import Selector
@@ -9,11 +10,27 @@ from hoteltracker.items import Hotel
 class HolidayinnSpider(Spider):
     name = "HolidayInn"
     allowed_domains = ["holidayinn.com", "ihg.com"]
+    url_template = 'http://www.holidayinn.com/hotels/us/en/{0}/hoteldetail'
+    time_format = '%b-%d-%Y'
 
-    # TODO: How can we pass in / use settings to define the start url?
-    start_urls = (
-        'http://www.holidayinn.com/hotels/us/en/toronto/yyzae/hoteldetail',
-        )
+    def __init__(self, location_code=None, check_in=None, check_out=None):
+        if not location_code:
+            location_code = 'toronto/yyzae'
+
+        # TODO: Seriously check for missing check in / out.
+        if not check_in:
+            check_in = '2014-05-03'
+
+        if not check_out:
+            check_out = '2014-05-05'
+
+        self.start_urls = [self.url_template.format(location_code)]
+
+        # Expect dates in ISO 8601, i.e. Oct 9 1988 -> 1988-10-09
+        # TODO: Get default time format from project
+        self.check_in = strftime(self.time_format, strptime(check_in, '%Y-%m-%d'))
+        self.check_out = strftime(self.time_format, strptime(check_out, '%Y-%m-%d'))
+
 
     def parse(self, response):
         sel = Selector(response)
@@ -31,9 +48,9 @@ class HolidayinnSpider(Spider):
                 'adultsCount'   : '1',
                 'childrenCount' : '0',
                 'roomsCount'    : '1',
-                'checkInDate'   : 'May-23-2014',
-                'checkOutDate'  : 'May-25-2014',
-                'groupCode'     : 'ANN',
+                'checkInDate'   : self.check_in,
+                'checkOutDate'  : self.check_out,
+                'groupCode'     : '',
                 'corporateId'   : ''
             },
             callback=self.after_post
