@@ -11,5 +11,7 @@ BOT_NAME = 'hoteltracker'
 SPIDER_MODULES = ['hoteltracker.spiders']
 NEWSPIDER_MODULE = 'hoteltracker.spiders'
 
+DATE_FORMAT = '%Y-%m-%d'
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'hoteltracker (+http://www.yourdomain.com)'
