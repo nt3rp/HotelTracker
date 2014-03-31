@@ -2,6 +2,7 @@ from time import strptime, strftime
 from scrapy.http import FormRequest
 from scrapy.selector import Selector
 from scrapy.spider import Spider
+from urlparse import urlparse
 from hoteltracker import settings
 
 class HotelSpider(Spider):
@@ -37,6 +38,13 @@ class HotelSpider(Spider):
             pass
 
         url = urls[0].extract()
+
+        # Need to append base URL
+        if url.startswith('/'):
+            host = '{uri.scheme}://{uri.netloc}'.format(
+                uri=urlparse(response.url)
+            )
+            url = '{host}{path}'.format(host=host, path=url)
 
         return [FormRequest(
             url=url,

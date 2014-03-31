@@ -10,7 +10,6 @@ class HolidayinnSpider(HotelSpider):
     allowed_domains = ["holidayinn.com", "ihg.com"]
     url_template = 'http://www.holidayinn.com/hotels/us/en/{0}/hoteldetail'
     date_format = '%b-%d-%Y'
-
     form_css = '#hotelDetailsBean::attr(action)'
 
     def populate_search_form(self):
