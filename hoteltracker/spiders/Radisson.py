@@ -42,41 +42,18 @@ class RadissonSpider(HotelSpider):
             'rateSearchForm.o[8].c':'0',
             'rateSearchForm.rmcCode':'',
             'rateSearchForm.ecertCode':'',
-            'rateSearchForm.promotionalCode':'',
+            'rateSearchForm.promotionalCode': self.group_code,
             'rateSearchForm.corporateAccountID':'',
             'rateSearchForm.travelAgencyId':''
         }
 
-    def is_search_results(self, response):
+    def has_search_results(self, response):
         sel = Selector(response)
-        search_form = sel.css('#hotelDetailsBean')
-        return not search_form
+        results = sel.css('.rateinfo')
+        return results
 
     def parse_search_results(self, response):
-        sel = Selector(response)
-
-        # TODO: How to extract just the first element?
-        rooms = sel.css('.rateinfo')
-        hotel = sel.css('.RADhotelname::text')
-
-        available = False
-
-        if rooms:
-            available = True
-
-        if not hotel:
-            # log something
-            pass
-
-        name = hotel[0].extract().strip()
-        hotel = '{hotel}'.format(hotel=self.name)
-
-        item = Hotel()
-        item['name'] = hotel
-        item['available'] = available
-        item['last_updated'] = datetime.now()
-
-        return item
+        return self.create_item(available=True)
 
     def parse_unknown(self, response):
-        return []
+        return self.create_item()

@@ -19,33 +19,28 @@ class HolidayinnSpider(HotelSpider):
             'roomsCount'    : '1',
             'checkInDate'   : self.check_in,
             'checkOutDate'  : self.check_out,
-            'groupCode'     : '',
+            'groupCode'     : self.group_code,
             'corporateId'   : ''
         }
 
-    def is_search_results(self, response):
+    def has_search_results(self, response):
         sel = Selector(response)
-        search_form = sel.css('#hotelDetailsBean')
-        return not search_form
+        results = sel.css('.ratesListing .roomsView')
+        return results
 
     def parse_search_results(self, response):
         sel = Selector(response)
-        rooms = sel.css('.ratesListing .roomsView')
-        hotel = sel.css('.sel_hoteldetail_link::attr(title)')
 
+        hotel = sel.css('.sel_hoteldetail_link::attr(title)')
         name = hotel[0].extract()
         hotel = '{hotel} - {location}'.format(hotel=self.name, location=name)
 
-        item = Hotel()
-        item['name'] = hotel
-        item['available'] = bool(rooms)
-        item['last_updated'] = datetime.now()
-
-        return item
+        return self.create_item(name=hotel, available=True)
 
     def parse_unknown(self, response):
         # TODO: Should return an item with availability `False` in this case
         # No rooms: There are no rooms available that match your requested travel criteria. Please consider modifying your preferences or travel dates, or select another hotel nearby
         # Bad code: The Group Code provided does not exist at this hotel. Please check the code and try again. Contact your nearest reservation office for assistance.
         # Missing URL Params: We are sorry, your Group Code cannot be booked on our web site. Please contact the hotel directly call your nearest reservation office for assistance.
-        return []
+
+        return self.create_item()
