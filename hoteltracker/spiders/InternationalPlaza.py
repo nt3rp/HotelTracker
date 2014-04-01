@@ -15,7 +15,6 @@ class InternationalPlaza(HotelSpider):
     # https://gc.synxis.com/rez.aspx
 
     def populate_params(self):
-        # Group code appears to be ignored in initial request...
         return {
             'arrive': self.check_in,
             'depart': self.check_out,
