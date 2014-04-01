@@ -15,7 +15,12 @@ class HotelSpider(Spider):
     use_query_params = False
 
     # TODO: Display Name, Shortname, etc.
-    def __init__(self, check_in=None, check_out=None, location_code=None, group_code=''):
+    def __init__(self,
+                 check_in=None,
+                 check_out=None,
+                 location_code=None,
+                 group_code='',
+                 display_name=None):
         assert location_code is not None, 'No location provided'
         assert check_in is not None, 'No check-in date provided'
         assert check_out is not None, 'No check-out date provided'
@@ -30,6 +35,8 @@ class HotelSpider(Spider):
             self.date_format,
             strptime(check_out, settings.DATE_FORMAT)
         )
+
+        self.display_name = display_name or self.name
 
         self.group_code = group_code
         self.location_code = location_code
@@ -77,12 +84,9 @@ class HotelSpider(Spider):
             callback=self.get_results
         )]
 
-    def create_item(self, name=None, available=False):
-        if not name:
-            name = self.name
-
+    def create_item(self, available=False):
         item = Hotel()
-        item['name'] = name
+        item['name'] = self.display_name
         item['available'] = available
         item['last_updated'] = datetime.now()
 

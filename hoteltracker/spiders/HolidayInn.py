@@ -29,13 +29,7 @@ class HolidayinnSpider(HotelSpider):
         return results
 
     def parse_search_results(self, response):
-        sel = Selector(response)
-
-        hotel = sel.css('.sel_hoteldetail_link::attr(title)')
-        name = hotel[0].extract()
-        hotel = '{hotel} - {location}'.format(hotel=self.name, location=name)
-
-        return self.create_item(name=hotel, available=True)
+        return self.create_item(available=True)
 
     def parse_unknown(self, response):
         # TODO: Should return an item with availability `False` in this case

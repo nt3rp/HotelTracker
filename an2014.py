@@ -17,6 +17,7 @@ check_in = '2014-05-23'
 check_out = '2014-05-25'
 spider_list = [
     ('HolidayInn', {
+        'display_name': 'Holiday Inn - Airport East',
         'location_code': 'toronto/yyzae',
         'check_in': check_in,
         'check_out': check_out,
