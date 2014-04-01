@@ -13,7 +13,7 @@ NEWSPIDER_MODULE = 'hoteltracker.spiders'
 
 ITEM_PIPELINES = {
     'hoteltracker.pipelines.SqlLiteItemsPipeline': 800,
-    'hoteltracker.pipelines.EmailPipeline': 801,
+    #'hoteltracker.pipelines.EmailPipeline': 801,
 }
 
 # Mail Settings
