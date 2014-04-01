@@ -6,6 +6,9 @@
 from scrapy.item import Item, Field
 
 class Hotel(Item):
+    # `_id` is Required by `scrapy-dblite`
+    #   https://github.com/ownport/scrapy-dblite/blob/master/docs/items.md
+    _id = Field()
     name = Field()
     available = Field()
     last_updated = Field()
