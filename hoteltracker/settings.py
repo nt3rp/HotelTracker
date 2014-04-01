@@ -14,7 +14,8 @@ NEWSPIDER_MODULE = 'hoteltracker.spiders'
 DATE_FORMAT = '%Y-%m-%d'
 
 ITEM_PIPELINES = {
-    'hoteltracker.pipelines.SqlLiteItemsPipeline.SqlLiteItemsPipeline': 800
+    'hoteltracker.pipelines.SqlLiteItemsPipeline': 800,
+#    'hoteltracker.pipelines.EmailPipeline': 801,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
