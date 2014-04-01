@@ -27,6 +27,12 @@ spider_list = [
         'check_in': check_in,
         'check_out': check_out,
         'group_code': 'ANIME'
+    }),
+    ('InternationalPlaza', {
+        'location_code': '',
+        'check_in': check_in,
+        'check_out': check_out,
+        'group_code': 'ANN'
     })
 ]
 spiders = len(spider_list)
