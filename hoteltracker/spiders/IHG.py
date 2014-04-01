@@ -5,10 +5,10 @@ from hoteltracker.items import Hotel
 from hoteltracker.spiders.HotelSpider import HotelSpider
 
 
-class HolidayinnSpider(HotelSpider):
-    name = "HolidayInn"
-    allowed_domains = ["holidayinn.com", "ihg.com"]
-    url_template = 'http://www.holidayinn.com/hotels/us/en/{0}/hoteldetail'
+class IHGSpider(HotelSpider):
+    name = "IHG"
+    allowed_domains = ["ihg.com"]
+    url_template = 'http://www.ihg.com/hotels/us/en/{0}/hoteldetail'
     date_format = '%b-%d-%Y'
     form_css = '#hotelDetailsBean::attr(action)'
 

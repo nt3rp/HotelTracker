@@ -16,7 +16,7 @@ close_signals = 0
 check_in = '2014-05-23'
 check_out = '2014-05-25'
 spider_list = [
-    ('HolidayInn', {
+    ('IHG', {
         'display_name': 'Holiday Inn - Airport East',
         'location_code': 'toronto/yyzae',
         'check_in': check_in,
@@ -34,7 +34,14 @@ spider_list = [
         'check_in': check_in,
         'check_out': check_out,
         'group_code': 'ANN' # Not 100% if this is the right code...
-    })
+    }),
+    ('IHG', {
+        'display_name': 'Crowne Plaza',
+        'location_code': 'toronto/yyzca',
+        'check_in': check_in,
+        'check_out': check_out,
+        'group_code': 'AHO'
+    }),
 ]
 spiders = len(spider_list)
 
