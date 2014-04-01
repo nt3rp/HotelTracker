@@ -34,8 +34,8 @@ MAIL_TLS = True
 # HotelSpider Settings
 DATE_FORMAT = '%Y-%m-%d'
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'hoteltracker (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ' \
+             '(KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
 
 # Generally, only use local_settings for mail_passwords
 try:

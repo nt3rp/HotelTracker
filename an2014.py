@@ -42,6 +42,15 @@ spider_list = [
         'check_out': check_out,
         'group_code': 'AHO'
     }),
+    # ('Starwood', {
+    #     'display_name': 'Sheraton',
+    #     'location_code': '3508',
+    #     'check_in': check_in,
+    #     'check_out': check_out,
+    #     # Best guess based on experimentation.
+    #     # Other guesses: ANM, ANN, AHO
+    #     'group_code': 'ANN'
+    # }),
 ]
 spiders = len(spider_list)
 
