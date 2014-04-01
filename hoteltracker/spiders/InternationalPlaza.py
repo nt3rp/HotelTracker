@@ -7,21 +7,24 @@ from hoteltracker.spiders.HotelSpider import HotelSpider
 
 class InternationalPlaza(HotelSpider):
     name = "InternationalPlaza"
-    allowed_domains = ["www.internationalplazahotel.com", "gc.synxis.com"]
-    url_template = 'http://www.internationalplazahotel.com/'
-    date_format = '%m/%d/%Y'
-    form_css = '.reservations::attr(action)'
+    allowed_domains = ["gc.synxis.com"]
+    url_template = 'https://gc.synxis.com/rez.aspx'
+    date_format = '%Y-%m-%d'
+    use_query_params = True
 
     # https://gc.synxis.com/rez.aspx
 
-    def populate_search_form(self):
+    def populate_params(self):
+        # Group code appears to be ignored in initial request...
         return {
-             'checkin': self.check_in,
-             'nights': '2',
-             'rooms': '1',
-             'adults': '1',
-             'children': '0',
-             'group': self.group_code
+            'arrive': self.check_in,
+            'depart': self.check_out,
+            'start': '111', # MAGIC: Remove this and it no longer works
+            'rooms': '1',
+            'adult': '1',
+            'child': '0',
+            'hotel': self.location_code,
+            'group': self.group_code
         }
 
     def has_search_results(self, response):

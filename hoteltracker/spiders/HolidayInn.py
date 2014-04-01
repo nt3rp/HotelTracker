@@ -12,7 +12,7 @@ class HolidayinnSpider(HotelSpider):
     date_format = '%b-%d-%Y'
     form_css = '#hotelDetailsBean::attr(action)'
 
-    def populate_search_form(self):
+    def populate_params(self):
         return {
             'adultsCount'   : '1',
             'childrenCount' : '0',

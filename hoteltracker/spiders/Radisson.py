@@ -12,7 +12,7 @@ class RadissonSpider(HotelSpider):
     date_format = '%m/%d/%Y'
     form_css = '[name=rateSearchForm]::attr(action)'
 
-    def populate_search_form(self):
+    def populate_params(self):
         return { # TODO: Which of these is critical
             'rateSearchForm.crossBrandSearch': 'thisBrandOnly',
             'rateSearchForm.redemptionSearch':'false',
