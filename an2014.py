@@ -51,6 +51,13 @@ spider_list = [
     #     # Other guesses: ANM, ANN, AHO
     #     'group_code': 'ANN'
     # }),
+    ('Travelodge', {
+        'location_code': 'ontario/toronto/'
+                         'travelodge-hotel-toronto-airport-dixon-road',
+        'check_in': check_in,
+        'check_out': check_out,
+        'group_code': 'CGANIM'
+    })
 ]
 spiders = len(spider_list)
 
