@@ -48,13 +48,20 @@ class EmailPipeline(SqlLiteItemsPipeline):
         if not isinstance(item, Hotel):
             raise DropItem("Unknown item type, %s" % type(item))
 
-        existing_item = self.ds.get({'name': item['name']}, limit=1)
+        # Need to `or` with a `dict` so that we can use `existing_item`
+        # even when it returns `None`
+        existing_item = self.ds.get({'name': item['name']}, limit=1) or {}
 
-        if existing_item:
+        was_available = bool(existing_item.get('available'))
+        is_available = bool(item.get('available'))
+
+        if existing_item and is_available and not was_available:
             subject = 'HotelScraper: {0} (Available)'.format(
                 existing_item['name']
             )
-            body = 'TEST MESSAGE'
+            # TODO: Perhaps include a link to the hotel?
+            # That would be useful for the twitter pipeline too...
+            body = 'This hotel has now become available!'
 
             mailer = MailSender.from_settings(spider.settings)
             mailer.send(
