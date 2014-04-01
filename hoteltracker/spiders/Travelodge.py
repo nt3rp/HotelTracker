@@ -25,7 +25,6 @@ class TravelodgeSpider(HotelSpider):
         }
 
     def has_search_results(self, response):
-        open_in_browser(response)
         sel = Selector(response)
 
         results = sel.css('.room_info')

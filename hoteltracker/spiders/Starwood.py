@@ -39,7 +39,6 @@ class StarwoordSpider(HotelSpider):
         return params
 
     def has_search_results(self, response):
-        open_in_browser(response)
         sel = Selector(response)
         results = sel.css('.roomRateBlock')
         return results
