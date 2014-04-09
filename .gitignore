@@ -1,4 +1,6 @@
 *.swp
 *.pyc
 *.idea
+*.sqlite
 /data/*
+*local_settings.py
